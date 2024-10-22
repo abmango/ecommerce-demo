@@ -58,13 +58,13 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'admin' => \App\Http\Middleware\CheckAdmin::class,
+        'test' => \App\Http\Middleware\TestMiddleware::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'admin' => \App\Http\Middleware\CheckAdmin::class,
-        'test' => \App\Http\Middleware\Test::class,
     ];
 }

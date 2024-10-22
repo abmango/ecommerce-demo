@@ -10,10 +10,15 @@ class CheckAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
-            return redirect('/'); // O redirige a una página de error o acceso denegado
+        //dd(Auth::user());
+        // Verificar si el usuario es admin
+        if (Auth::check()) {
+            if (Auth::user()->role !== 'admin') {
+                return redirect('/dashboard'); // Redirigir a la página de inicio si no es admin
+            }
         }
 
+        // Si es admin, permitir que continúe
         return $next($request);
     }
 }
