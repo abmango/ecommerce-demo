@@ -18,6 +18,22 @@
         </li>
       </ul>
     </div>
+
+    <!-- Formulario para confirmar la orden -->
+    <div v-if="order.status === 'pendiente'" class="flex space-x-4 mt-4">
+      <form @submit.prevent="confirmOrder" method="POST">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Confirmar
+        </button>
+      </form>
+
+      <!-- Formulario para rechazar la orden -->
+      <form @submit.prevent="rejectOrder" method="POST">
+        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+          Rechazar
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -29,5 +45,13 @@ export default {
     order: Object
   },
   components: { InertiaLink },
+  methods: {
+    confirmOrder() {
+      this.$inertia.post(`/orders/${this.order.id}/confirm`);
+    },
+    rejectOrder() {
+      this.$inertia.post(`/orders/${this.order.id}/reject`);
+    }
+  },
 }
 </script>

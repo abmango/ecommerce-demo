@@ -164,7 +164,7 @@ class CartController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $total, // Asegúrate de que el campo total esté presente
-                'status' => 'completed'
+                'status' => 'pendiente'
             ]);
 
             foreach ($cartItems as $item) {
@@ -183,10 +183,7 @@ class CartController extends Controller
             // Limpiar el carrito
             CartItem::where('user_id', auth()->id())->delete();
         } else {
-            dd('Llegué al controlador');
-            // Si no está logueado, le pide que se loguee
-            /*$cart = $request->session()->get('cart', []);
-            $request->session()->forget('cart');*/
+            
             return redirect()->route('login')->with('error', 'Primero debes loguearte para comprar.');
         }
 

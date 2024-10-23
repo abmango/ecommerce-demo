@@ -2,7 +2,7 @@
   <div class="container mx-auto py-8">
     <div class="absolute top-0 right-0 mt-4 mr-4">
       <Link href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Volver
+      Volver
       </Link>
     </div>
 
@@ -14,17 +14,20 @@
     <p class="text-gray-500">Tipo: {{ product.type }}</p>
 
     <!-- Botón para agregar al carrito -->
-    <button @click="addToCart" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-      Agregar al carrito
-    </button>
+    
+      <button v-if="auth && auth.role === 'user'"@click="addToCart"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Agregar al carrito
+      </button>
 
-    <div v-if="auth" class="flex space-x-4 mt-4">
+    <div v-if="auth && auth.role === 'admin'" class="flex space-x-4 mt-4">
       <button @click="deleteProduct"
-              class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         Dar de baja
       </button>
-      <Link :href="`/products/${product.id}/edit`" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Editar
+      <Link :href="`/products/${product.id}/edit`"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      Editar
       </Link>
     </div>
 
@@ -32,7 +35,7 @@
 </template>
 
 <script>
-import { Link  } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/inertia-vue3';
 import DeleteProduct from './Delete.vue';
 
 export default {

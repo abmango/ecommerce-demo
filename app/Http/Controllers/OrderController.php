@@ -59,4 +59,26 @@ class OrderController extends Controller
             'order' => $order,
         ]);
     }
+
+    public function confirm($id)
+    {
+        $order = Order::findOrFail($id);
+
+        $order->status = 'confirmada'; // Cambia a tu estado deseado
+        $order->save();
+
+        // Redirige a la vista de órdenes con un mensaje de éxito
+        return redirect()->route('orders.index')->with('success', 'Orden confirmada con éxito.');
+    }
+
+    public function reject($id)
+    {
+        $order = Order::findOrFail($id);
+
+        $order->status = 'rechazada'; // Cambia a tu estado deseado
+        $order->save();
+
+        // Redirige a la vista de órdenes con un mensaje de éxito
+        return redirect()->route('orders.index')->with('success', 'Orden rechazada con éxito.');
+    }
 }
