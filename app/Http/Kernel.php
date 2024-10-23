@@ -29,6 +29,8 @@ class Kernel extends HttpKernel
 
         // Prevenir ataques de cross-site scripting (XSS).
         \App\Http\Middleware\VerifyCsrfToken::class,
+
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
