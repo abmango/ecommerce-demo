@@ -7,7 +7,7 @@
     </div>
 
     <h1 class="text-2xl font-bold mb-6 text-center">Carrito de Compras</h1>
-    
+
     <div v-if="cart.length > 0" class="overflow-x-auto">
       <table class="min-w-full bg-white border border-gray-300 table-auto">
         <thead>
@@ -26,7 +26,9 @@
             <td class="py-2 px-4 border border-gray-300">${{ item.price }}</td>
             <td class="py-2 px-4 border border-gray-300">${{ (item.price * item.quantity).toFixed(2) }}</td>
             <td class="py-2 px-4 border border-gray-300">
-              <button @click="removeFromCart(item.id)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              <input type="number" v-model="item.quantity" @change="updateQuantity(item.id, item.quantity)">
+              <button @click="removeFromCart(item.id)"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Eliminar
               </button>
             </td>
@@ -54,6 +56,7 @@
 
 <script>
 import { Link as InertiaLink } from '@inertiajs/vue3';
+import axios from 'axios';
 
 export default {
   props: {
@@ -64,15 +67,58 @@ export default {
       return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     }
   },
+
   components: { InertiaLink },
   methods: {
-    removeFromCart(id) {
-      this.$inertia.delete(`/cart/remove/${id}`);
-    },
-    processPurchase() {
-      if (confirm('¿Estás seguro de que quieres procesar esta compra?')) {
-        this.$inertia.post('/cart/checkout');
+    updateQuantity(id, quantity) {
+      if (quantity < 1) {
+        console.error('La cantidad debe ser al menos 1');
+        return; // Salir si la cantidad es inválida
       }
+      console.log('Actualizando producto con ID:', id, 'Cantidad:', quantity); // Para depuración
+      axios.post(`/cart/update/${id}`, { quantity: quantity })
+        .then(response => {
+          console.log('Update response:', response);
+          if (response.data.success) {
+            this.$inertia.reload(); // Recargar la página si se actualizó correctamente
+          } 
+          else {
+            console.error('Error al actualizar la cantidad:', response.data.message);
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.error('Error en la petición:', error.response.data);
+          } else if (error.request) {
+            console.error('No se recibió respuesta del servidor:', error.request);
+          } else {
+            console.error('Error al configurar la petición:', error.message);
+          }
+        });
+    },
+
+    removeFromCart(id) {
+      axios.delete(`/cart/remove/${id}`)
+        .then(response => {
+          if (response.data.success) {
+            this.$inertia.reload(); // Recargar la página si se eliminó correctamente
+          } else {
+            console.error('Error al eliminar el producto:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error en la petición:', error);
+        });
+    },
+
+    processPurchase() {
+      axios.post('/cart/checkout')
+        .then(response => {
+          this.$inertia.visit('/orders');
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 }
@@ -86,7 +132,8 @@ table {
 }
 
 /* Estilo para las celdas de la tabla */
-th, td {
+th,
+td {
   text-align: center;
   padding: 8px;
   border: 1px solid #ddd;
