@@ -16,10 +16,6 @@ Route::get('/', function () {
     ]);
 });
 
-// No hace falta iniciar sesión para ver los productos
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-
 // Carrito
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -58,3 +54,6 @@ Route::middleware([
 
 });
 
+// No hace falta iniciar sesión para ver los productos
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
