@@ -137,9 +137,7 @@ class CartController extends Controller
                 unset($cart[$id]);
                 session()->put('cart', $cart);
 
-                return Inertia::render('Cart/Index', [
-                    'cart' => $cart
-                ]);
+                return response()->json(['success' => true]);
             }
 
             return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
@@ -185,9 +183,11 @@ class CartController extends Controller
             // Limpiar el carrito
             CartItem::where('user_id', auth()->id())->delete();
         } else {
-            // Manejo del carrito para usuarios no autenticados
-            $cart = $request->session()->get('cart', []);
-            $request->session()->forget('cart');
+            dd('Llegué al controlador');
+            // Si no está logueado, le pide que se loguee
+            /*$cart = $request->session()->get('cart', []);
+            $request->session()->forget('cart');*/
+            return redirect()->route('login')->with('error', 'Primero debes loguearte para comprar.');
         }
 
         return redirect()->route('cart.index')->with('success', 'Compra procesada correctamente.');

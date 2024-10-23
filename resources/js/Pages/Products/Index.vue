@@ -7,7 +7,7 @@
       </InertiaLink>
     </div>
 
-    <div class="absolute top-0 left-0 mt-4 mr-4">
+    <div v-if="auth && auth.role === 'admin'" class="absolute top-0 left-0 mt-4 mr-4">
       <InertiaLink href="/products/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Agregar producto
       </InertiaLink>
@@ -43,6 +43,7 @@ import { Link as InertiaLink } from '@inertiajs/vue3';
 export default {
   props: {
     products: Array,
+    auth: Object,
   },
   components: { InertiaLink, },
   methods: {
