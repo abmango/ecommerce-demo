@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -52,13 +53,21 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show($id)
+    /*public function show($id)
     {
-        $order = Order::with('products')->findOrFail($id);
-
-        // Pasar los datos de la orden a la vista
+        $order = Order::with('orderItems.product')->findOrFail($id);
         return Inertia::render('Orders/Show', [
-            'order' => $order
+            'order' => $order,
+        ]);
+    }*/
+
+    public function show($id) {
+        $order = Order::with('items.product')->findOrFail($id);
+        
+        //dd($order);
+        //return response()->json($order);
+        return Inertia::render('Orders/Show', [
+            'order' => $order,
         ]);
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Inertia\Inertia;
 
 class CartController extends Controller
@@ -145,72 +146,47 @@ class CartController extends Controller
         }
     }
 
-
-
-    /*public function checkout(Request $request)
-    {
-        if (auth()->check()) {
-            $cartItems = CartItem::where('user_id', auth()->id())->get();
-
-            foreach ($cartItems as $item) {
-                // Por ejemplo, podrías restar el stock del producto y generar una orden
-
-            }
-            CartItem::where('user_id', auth()->id())->delete();
-        } else {
-            $cart = $request->session()->get('cart', []);
-
-            $request->session()->forget('cart');
-        }
-
-        return redirect()->route('cart.index')->with('success', 'Compra procesada correctamente.');
-    }*/
-
     public function checkout(Request $request)
     {
         if (auth()->check()) {
             $cartItems = CartItem::where('user_id', auth()->id())->get();
 
+            if ($cartItems->isEmpty()) {
+                return redirect()->route('cart.index')->with('error', 'El carrito está vacío.');
+            }
+
+            // Calcular el total de la orden
             $total = 0;
-            $orderItems = [];
 
             foreach ($cartItems as $item) {
-                // Restar stock del producto
-                $product = Product::find($item->product_id);
-                if ($product) {
-                    $product->stock -= $item->quantity;
-                    $product->save();
-
-                    // Agregar el item a la orden
-                    $orderItems[] = [
-                        'product_id' => $item->product_id,
-                        'quantity' => $item->quantity,
-                        'price' => $product->price,
-                    ];
-
-                    // Sumar el total
-                    $total += $product->price * $item->quantity;
-                }
+                $total += $item->product->price * $item->quantity;
             }
 
             // Crear la orden
             $order = Order::create([
                 'user_id' => auth()->id(),
-                'total' => $total,
-                'status' => 'completed', // o el estado que desees
+                'total' => $total, // Asegúrate de que el campo total esté presente
+                'status' => 'completed'
             ]);
 
-            // Crear los items de la orden
-            foreach ($orderItems as $orderItem) {
-                $order->items()->create($orderItem);
+            foreach ($cartItems as $item) {
+                // Crear OrderItem y reducir el stock del producto
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->price,
+                ]);
+
+                // Aquí también deberías reducir el stock del producto
+                $item->product->decrement('stock', $item->quantity);
             }
 
             // Limpiar el carrito
             CartItem::where('user_id', auth()->id())->delete();
-
         } else {
+            // Manejo del carrito para usuarios no autenticados
             $cart = $request->session()->get('cart', []);
-            // Aquí podrías manejar el proceso de checkout para usuarios no autenticados si es necesario
             $request->session()->forget('cart');
         }
 

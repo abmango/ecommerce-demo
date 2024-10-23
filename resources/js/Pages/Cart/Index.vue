@@ -112,6 +112,7 @@ export default {
     },
 
     processPurchase() {
+      console.log('Realizando orden de compra...');
       axios.post('/cart/checkout')
         .then(response => {
           this.$inertia.visit('/orders');

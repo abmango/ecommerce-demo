@@ -95,7 +95,7 @@ Route::middleware([
     });
 
     // Checkout (compra)
-    Route::post('/cart/checkout', [OrderController::class, 'store'])->name('cart.checkout');
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 });
