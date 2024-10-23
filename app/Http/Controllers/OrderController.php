@@ -45,8 +45,6 @@ class OrderController extends Controller
 
     public function index()
     {
-        //$orders = Order::where('user_id', auth()->id())->with('products')->get();
-
         $orders = Order::with('user')->get();
 
         // Asegúrate de pasar los datos a la vista
@@ -54,20 +52,9 @@ class OrderController extends Controller
             'orders' => $orders
         ]);
     }
-
-    /*public function show($id)
-    {
-        $order = Order::with('orderItems.product')->findOrFail($id);
-        return Inertia::render('Orders/Show', [
-            'order' => $order,
-        ]);
-    }*/
-
     public function show($id) {
         $order = Order::with('items.product')->findOrFail($id);
         
-        //dd($order);
-        //return response()->json($order);
         return Inertia::render('Orders/Show', [
             'order' => $order,
         ]);

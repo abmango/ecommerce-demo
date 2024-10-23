@@ -2,7 +2,7 @@
   <div class="container mx-auto py-8">
     <div class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Seguir comprando
+        Volver a productos
       </InertiaLink>
     </div>
     <h1 class="text-2xl font-bold mb-6">Todas las Órdenes</h1>

@@ -3,7 +3,13 @@
 
     <div class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/cart" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Carrito <!--({{ cart.length }})-->
+        Carrito
+      </InertiaLink>
+    </div>
+
+    <div class="absolute top-0 left-0 mt-4 mr-4">
+      <InertiaLink href="/products/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Agregar producto
       </InertiaLink>
     </div>
 
