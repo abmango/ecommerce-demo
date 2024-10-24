@@ -36,15 +36,15 @@ Route::middleware([
     })->name('dashboard');
 
     // Agregar, editar o borrar productos
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware(\App\Http\Middleware\CheckAdmin::class, );
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware(\App\Http\Middleware\CheckAdmin::class, );
-    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(\App\Http\Middleware\CheckAdmin::class, );
-    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(\App\Http\Middleware\CheckAdmin::class, );
-    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(\App\Http\Middleware\CheckAdmin::class, );
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware(\App\Http\Middleware\CheckAdmin::class);
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware(\App\Http\Middleware\CheckAdmin::class);
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(\App\Http\Middleware\CheckAdmin::class);
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(\App\Http\Middleware\CheckAdmin::class);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(\App\Http\Middleware\CheckAdmin::class);
 
     // Órdenes de compra
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware(\App\Http\Middleware\CheckAdmin::class);;
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show')->middleware(\App\Http\Middleware\CheckAdmin::class);;
     
     Route::post('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
