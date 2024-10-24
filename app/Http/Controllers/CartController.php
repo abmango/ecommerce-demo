@@ -183,8 +183,7 @@ class CartController extends Controller
             // Limpiar el carrito
             CartItem::where('user_id', auth()->id())->delete();
         } else {
-            
-            return redirect()->route('login')->with('error', 'Primero debes loguearte para comprar.');
+            return redirect()->route('login')->with('success', 'Primero debes loguearte para comprar.');
         }
 
         return redirect()->route('cart.index')->with('success', 'Compra procesada correctamente.');

@@ -81,7 +81,7 @@ export default {
           console.log('Update response:', response);
           if (response.data.success) {
             this.$inertia.reload(); // Recargar la página si se actualizó correctamente
-          } 
+          }
           else {
             console.error('Error al actualizar la cantidad:', response.data.message);
           }
@@ -112,6 +112,12 @@ export default {
     },
 
     processPurchase() {
+
+      if (!this.auth || !this.auth.user) { // Verificar si el usuario está autenticado
+        alert('Debes iniciar sesión para realizar la compra.');
+        this.$inertia.visit('/login'); // Redirigir al usuario a la página de login
+        return;
+      }
       console.log('Realizando orden de compra...');
       axios.post('/cart/checkout')
         .then(response => {
