@@ -1,8 +1,14 @@
 <template>
   <div class="container mx-auto py-8">
-    <div class="absolute top-0 right-0 mt-4 mr-4">
+    <div v-if="auth && auth.role === 'user'" class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/cart" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Carrito
+      </InertiaLink>
+    </div>
+
+    <div v-if="auth && auth.role === 'admin'" class="absolute top-0 right-0 mt-4 mr-4">
+      <InertiaLink href="/orders" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Órdenes de compra
       </InertiaLink>
     </div>
 
