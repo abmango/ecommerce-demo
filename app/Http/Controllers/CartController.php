@@ -55,41 +55,64 @@ class CartController extends Controller
     {
         $product = Product::findOrFail($id);
 
+        // Verificar si hay suficiente stock antes de agregar al carrito
+        if ($product->stock < 1) {
+            return redirect()->route('cart.index')->with('error', 'No hay suficiente stock para este producto.');
+        }
+
         if (auth()->check()) {
-            // Guardar en la base de datos
-            $cartItem = CartItem::updateOrCreate(
+            // Verificar stock antes de actualizar o crear el CartItem
+            $cartItem = CartItem::where('user_id', auth()->id())->where('product_id', $product->id)->first();
+
+            $newQuantity = $cartItem ? $cartItem->quantity + 1 : 1;
+
+            if ($newQuantity > $product->stock) {
+                return redirect()->route('cart.index')->with('error', 'No hay suficiente stock para esta cantidad.');
+            }
+
+            // Guardar o actualizar en la base de datos
+            CartItem::updateOrCreate(
                 ['user_id' => auth()->id(), 'product_id' => $product->id],
-                ['quantity' => DB::raw('quantity + 1')]
+                ['quantity' => $newQuantity]
             );
         } else {
             // Guardar en sesión para usuarios no autenticados
             $cart = $request->session()->get('cart', []);
-            if (!isset($cart[$id])) {
-                $cart[$id] = ['quantity' => 1];
-            } else {
-                $cart[$id]['quantity']++;
+            $newQuantity = isset($cart[$id]) ? $cart[$id]['quantity'] + 1 : 1;
+
+            if ($newQuantity > $product->stock) {
+                return redirect()->route('cart.index')->with('error', 'No hay suficiente stock para esta cantidad.');
             }
+
+            $cart[$id] = ['quantity' => $newQuantity];
             $request->session()->put('cart', $cart);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Producto agregado al carrito');
+        return redirect()->route('cart.index')->with('success', 'Producto agregado al carrito.');
     }
+
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
 
         if (auth()->check()) {
             // Usuario autenticado, actualizar el carrito en la base de datos
             $cartItem = CartItem::find($id);
 
             if ($cartItem) {
-                $validatedData = $request->validate([
-                    'quantity' => 'required|integer|min:1'
-                ]);
+                $product = $cartItem->product;
+
+                // Verificar si hay suficiente stock para la cantidad solicitada
+                if ($validatedData['quantity'] > $product->stock) {
+                    return response()->json(['success' => false, 'message' => 'No hay suficiente stock para esta cantidad'], 400);
+                }
 
                 $cartItem->quantity = $validatedData['quantity'];
                 $cartItem->save();
 
-                return response()->json(['success' => true]); // Asegúrate de que esto se envíe
+                return response()->json(['success' => true]);
             }
 
             return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
@@ -98,16 +121,17 @@ class CartController extends Controller
             $cart = session()->get('cart', []);
 
             if (isset($cart[$id])) {
-                $validatedData = $request->validate([
-                    'quantity' => 'required|integer|min:1'
-                ]);
+                $product = Product::find($id);
+
+                // Verificar si hay suficiente stock para la cantidad solicitada
+                if ($validatedData['quantity'] > $product->stock) {
+                    return response()->json(['success' => false, 'message' => 'No hay suficiente stock para esta cantidad'], 400);
+                }
 
                 $cart[$id]['quantity'] = $validatedData['quantity'];
                 session()->put('cart', $cart);
 
-                return Inertia::render('Cart/Index', [
-                    'cart' => $cart
-                ]);
+                return response()->json(['success' => true]);
             }
 
             return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);

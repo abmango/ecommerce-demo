@@ -73,7 +73,8 @@ export default {
   methods: {
     updateQuantity(id, quantity) {
       if (quantity < 1) {
-        console.error('La cantidad debe ser al menos 1');
+        alert('La cantidad debe ser al menos 1');
+        this.$inertia.reload();
         return; // Salir si la cantidad es inválida
       }
       console.log('Actualizando producto con ID:', id, 'Cantidad:', quantity); // Para depuración
@@ -84,12 +85,15 @@ export default {
             this.$inertia.reload(); // Recargar la página si se actualizó correctamente
           }
           else {
-            console.error('Error al actualizar la cantidad:', response.data.message);
+            alert('Error al actualizar la cantidad: ' + response.data.message);
+            this.$inertia.reload();
           }
         })
         .catch(error => {
           if (error.response) {
             console.error('Error en la petición:', error.response.data);
+            alert('Error al actualizar la cantidad: ' + error.response.data.message);
+            this.$inertia.reload();
           } else if (error.request) {
             console.error('No se recibió respuesta del servidor:', error.request);
           } else {
