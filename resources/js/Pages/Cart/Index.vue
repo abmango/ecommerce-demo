@@ -75,14 +75,14 @@ export default {
       if (quantity < 1) {
         alert('La cantidad debe ser al menos 1');
         this.$inertia.reload();
-        return; // Salir si la cantidad es inválida
+        return;
       }
-      console.log('Actualizando producto con ID:', id, 'Cantidad:', quantity); // Para depuración
+      console.log('Actualizando producto con ID:', id, 'Cantidad:', quantity);
       axios.post(`/cart/update/${id}`, { quantity: quantity })
         .then(response => {
           console.log('Update response:', response);
           if (response.data.success) {
-            this.$inertia.reload(); // Recargar la página si se actualizó correctamente
+            this.$inertia.reload();
           }
           else {
             alert('Error al actualizar la cantidad: ' + response.data.message);
@@ -106,7 +106,7 @@ export default {
       axios.delete(`/cart/remove/${id}`)
         .then(response => {
           if (response.data.success) {
-            this.$inertia.reload(); // Recargar la página si se eliminó correctamente
+            this.$inertia.reload();
           } else {
             console.error('Error al eliminar el producto:', response.data.message);
           }
@@ -118,9 +118,9 @@ export default {
 
     processPurchase() {
 
-      if (!this.auth || !this.auth.user) { // Verificar si el usuario está autenticado
+      if (!this.auth || !this.auth.user) {
         alert('Debes iniciar sesión para realizar la compra.');
-        this.$inertia.visit('/login'); // Redirigir al usuario a la página de login
+        this.$inertia.visit('/login');
         return;
       }
       console.log('Realizando orden de compra...');

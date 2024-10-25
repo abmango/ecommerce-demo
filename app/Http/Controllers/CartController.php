@@ -98,13 +98,11 @@ class CartController extends Controller
         ]);
 
         if (auth()->check()) {
-            // Usuario autenticado, actualizar el carrito en la base de datos
             $cartItem = CartItem::find($id);
 
             if ($cartItem) {
                 $product = $cartItem->product;
 
-                // Verificar si hay suficiente stock para la cantidad solicitada
                 if ($validatedData['quantity'] > $product->stock) {
                     return response()->json(['success' => false, 'message' => 'No hay suficiente stock para esta cantidad'], 400);
                 }
@@ -117,13 +115,11 @@ class CartController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
         } else {
-            // Usuario no autenticado, manejar carrito en la sesión
             $cart = session()->get('cart', []);
 
             if (isset($cart[$id])) {
                 $product = Product::find($id);
 
-                // Verificar si hay suficiente stock para la cantidad solicitada
                 if ($validatedData['quantity'] > $product->stock) {
                     return response()->json(['success' => false, 'message' => 'No hay suficiente stock para esta cantidad'], 400);
                 }
@@ -142,9 +138,7 @@ class CartController extends Controller
     public function remove($id)
     {
         if (auth()->check()) {
-            // Usuario autenticado, eliminar producto del carrito en la base de datos
             $cartItem = CartItem::find($id);
-
 
             if ($cartItem) {
                 $cartItem->delete();
@@ -154,7 +148,6 @@ class CartController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
         } else {
-            // Usuario no autenticado, eliminar producto del carrito en la sesión
             $cart = session()->get('cart', []);
 
             if (isset($cart[$id])) {
@@ -177,22 +170,19 @@ class CartController extends Controller
                 return redirect()->route('cart.index')->with('error', 'El carrito está vacío.');
             }
 
-            // Calcular el total de la orden
             $total = 0;
 
             foreach ($cartItems as $item) {
                 $total += $item->product->price * $item->quantity;
             }
 
-            // Crear la orden
             $order = Order::create([
                 'user_id' => auth()->id(),
-                'total' => $total, // Asegúrate de que el campo total esté presente
+                'total' => $total, 
                 'status' => 'pendiente'
             ]);
 
             foreach ($cartItems as $item) {
-                // Crear OrderItem y reducir el stock del producto
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
@@ -203,7 +193,6 @@ class CartController extends Controller
                 $item->product->decrement('stock', $item->quantity);
             }
 
-            // Limpiar el carrito
             CartItem::where('user_id', auth()->id())->delete();
         } else {
             return redirect()->route('login')->with('success', 'Primero debes loguearte para comprar.');

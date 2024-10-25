@@ -35,10 +35,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all()); // Esto te permitirá ver exactamente qué datos está recibiendo el backend
 
         try {
-            // Validación de los datos
             $request->validate([
                 'name' => 'required|string|max:255',
                 'price' => 'required|numeric',
@@ -48,7 +46,6 @@ class ProductController extends Controller
                 'type' => 'required|string|max:100',
             ]);
 
-            // Crear el producto
             Product::create([
                 'name' => $request->name,
                 'price' => $request->price,
@@ -58,7 +55,6 @@ class ProductController extends Controller
                 'type' => $request->type,
             ]);
 
-            // Redirigir al index o mostrar un mensaje de éxito
             return redirect()->route('products.index')->with('success', 'Producto creado exitosamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -74,7 +70,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return Inertia::render('Products/Show', [
             'product' => $product,
-            'auth' => auth()->user(), // Enviar datos del usuario autenticado
+            'auth' => auth()->user(),
         ]);
     }
 
@@ -86,7 +82,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return Inertia::render('Products/Edit', [
             'product' => $product,
-            'id' => $product->id, // Asegúrate de pasar el id
+            'id' => $product->id,
         ]);
     }
 
@@ -125,7 +121,7 @@ class ProductController extends Controller
     public function restore($id)
     {
         $product = Product::withTrashed()->find($id);
-        $product->restore();  // Esto restaura el producto
+        $product->restore();
         return redirect()->route('products.index')->with('success', 'Producto restaurado correctamente');
     }
 }

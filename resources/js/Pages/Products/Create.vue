@@ -97,7 +97,6 @@ export default {
   },
   methods: {
     submitForm() {
-      // Envío de los datos del formulario al backend
       this.$inertia.post('/products', this.form);
     }
   }

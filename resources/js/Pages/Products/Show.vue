@@ -52,7 +52,7 @@ export default {
       if (confirm('¿Estás seguro de que quieres dar de baja este producto?')) {
         this.$inertia.delete(`/products/${this.product.id}`)
           .then(() => {
-            this.$inertia.visit('/products'); // Redirige al listado después de dar de baja
+            this.$inertia.visit('/products');
           });
       }
     },

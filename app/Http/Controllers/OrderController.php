@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -16,22 +15,18 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-            // Crear la orden
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $request->total,
                 'status' => 'pendiente',
             ]);
 
-            // Obtener los productos del carrito
             $cartItems = CartItem::where('user_id', auth()->id())->get();
 
-            // Asociar los productos con la orden
             foreach ($cartItems as $item) {
                 $order->products()->attach($item->product_id, ['quantity' => $item->quantity, 'price' => $item->product->price]);
             }
 
-            // Vaciar el carrito
             CartItem::where('user_id', auth()->id())->delete();
 
             DB::commit();
@@ -47,7 +42,6 @@ class OrderController extends Controller
     {
         $orders = Order::with('user')->get();
 
-        // Asegúrate de pasar los datos a la vista
         return Inertia::render('Orders/Index', [
             'orders' => $orders
         ]);
@@ -64,10 +58,9 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = 'confirmada'; // Cambia a tu estado deseado
+        $order->status = 'confirmada';
         $order->save();
 
-        // Redirige a la vista de órdenes con un mensaje de éxito
         return redirect()->route('orders.index')->with('success', 'Orden confirmada con éxito.');
     }
 
@@ -75,10 +68,9 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = 'rechazada'; // Cambia a tu estado deseado
+        $order->status = 'rechazada';
         $order->save();
 
-        // Redirige a la vista de órdenes con un mensaje de éxito
         return redirect()->route('orders.index')->with('success', 'Orden rechazada con éxito.');
     }
 }

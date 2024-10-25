@@ -55,11 +55,11 @@ export default {
   props: {
     product: {
       type: Object,
-      required: true,  // Se asegura de que el producto sea pasado correctamente
+      required: true,
     },
     id: {
       type: Number,
-      required: true,  // Se asegura de que el id sea pasado correctamente
+      required: true,
     },
   },
   data() {
