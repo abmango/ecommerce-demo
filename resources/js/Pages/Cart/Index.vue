@@ -61,6 +61,7 @@ import axios from 'axios';
 export default {
   props: {
     cart: Array,
+    auth: Object,
   },
   computed: {
     total() {
@@ -121,7 +122,8 @@ export default {
       console.log('Realizando orden de compra...');
       axios.post('/cart/checkout')
         .then(response => {
-          this.$inertia.visit('/orders');
+          alert('¡Orden de compra realizada! La misma ha sido enviada a los vendedores.');
+            this.$inertia.visit('/products');
         })
         .catch(error => {
           console.error(error);

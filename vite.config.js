@@ -7,7 +7,7 @@ export default defineConfig({
         host: true,  // Permitir que se acceda desde una IP externa
         port: 5173,  // O el puerto que prefieras
         hmr: {
-          host: 'localhost',  // Tu dominio público
+          host: 'flamius.ddns.net',  // Tu dominio público
           port: 5173
         }
       },

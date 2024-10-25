@@ -15,7 +15,7 @@
 
     <!-- Botón para agregar al carrito -->
     
-      <button v-if="!auth || auth.role === 'user'"@click="addToCart"
+      <button  v-if="!auth || (auth && auth.role === 'user')" @click="addToCart"
         class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         Agregar al carrito
       </button>

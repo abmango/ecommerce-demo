@@ -176,7 +176,6 @@ class CartController extends Controller
                     'price' => $item->product->price,
                 ]);
 
-                // Aquí también deberías reducir el stock del producto
                 $item->product->decrement('stock', $item->quantity);
             }
 
