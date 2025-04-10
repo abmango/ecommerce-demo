@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   web:
-    image: php:8.2-apache
+    # image: php:8.2-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: apache_server
     ports:
       - "8080:80"
