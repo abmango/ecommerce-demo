@@ -11,6 +11,7 @@
         "laravel/jetstream": "^5.2",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "laraveles/spanish": "^1.5",
         "livewire/livewire": "^3.0",
         "tightenco/ziggy": "^2.0"
     },

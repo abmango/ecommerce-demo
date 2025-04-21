@@ -40,7 +40,7 @@ const closeModal = () => {
 <template>
     <ActionSection>
         <template #title>
-            Delete Account
+            Eliminación de cuenta
         </template>
 
         <template #description>

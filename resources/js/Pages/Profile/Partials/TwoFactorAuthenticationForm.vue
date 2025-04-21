@@ -105,7 +105,7 @@ const disableTwoFactorAuthentication = () => {
 </script>
 
 <template>
-    <ActionSection>
+    <ActionSection style="display: none;"> 
         <template #title>
             Two Factor Authentication
         </template>
