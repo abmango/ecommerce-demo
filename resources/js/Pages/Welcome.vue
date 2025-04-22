@@ -66,8 +66,8 @@ defineProps({
                 </aside>
                 <div class="grid grid-cols-12 gap-4 mt-3 p-0 m-0">
                     <div v-for="n in 6" class="col-span-12 sm:col-span-6 lg:col-span-4">
-                        <div class="bg-white  w-full min-h-60 shadow bg-cover bg-center relative" :style="'background-image: url(/images/home-prod-'+n+'.png)'">
-                            <div class="absolute bg-black opacity-45 w-full h-full flex text-center justify-center items-center">
+                        <div class="bg-white  w-full min-h-60 shadow bg-cover bg-center relative hover:cursor-pointer hover:text-xl hover:ease-in hover:duration-150" :style="'background-image: url(/images/home-prod-'+n+'.png)'">
+                            <div class="absolute bg-black opacity-50 w-full h-full flex text-center justify-center items-center">
                             </div>  
                             <div class="w-full h-full flex text-slate-200 absolute z-20 justify-center items-center text-center">
                                 <div>Producto {{n}}</div>
