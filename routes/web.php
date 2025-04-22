@@ -14,7 +14,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('welcome');
 
 // Carrito
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');

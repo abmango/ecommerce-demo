@@ -6,6 +6,6 @@
     display: none;
 }
 
-* {
-    font-weight: 400;
+body {
+    background-color: rgb(251, 248, 255);
 }
