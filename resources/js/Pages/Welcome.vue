@@ -1,5 +1,8 @@
 <script setup>
 import GuestHeader from '@/Components/GuestHeader.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 defineProps({
@@ -29,7 +32,7 @@ defineProps({
                 Slider de presentacion
             </span>
         </section>
-        <section id="nosotros" class="p-5 bg-white">
+        <section id="nosotros" class="p-5 bg-white shadow">
             <div class="container sm:w-11/12 xl:w-9/12 mx-auto">
                 <h1 class="text-2xl border-b pb-2">Nosotros</h1>
                 <div class="mt-4 grid grid-cols-12 justify-center items-center lg:items-start">
@@ -67,7 +70,7 @@ defineProps({
                 <div class="grid grid-cols-12 gap-4 mt-3 p-0 m-0">
                     <div v-for="n in 6" class="col-span-12 sm:col-span-6 lg:col-span-4">
                         <div class="bg-white  w-full min-h-60 shadow bg-cover bg-center relative hover:cursor-pointer hover:text-xl hover:ease-in hover:duration-150" :style="'background-image: url(/images/home-prod-'+n+'.png)'">
-                            <div class="absolute bg-black opacity-50 w-full h-full flex text-center justify-center items-center">
+                            <div class="absolute bg-black opacity-50 w-full h-full flex text-center justify-center items-center top-0 start-0">
                             </div>  
                             <div class="w-full h-full flex text-slate-200 absolute z-20 justify-center items-center text-center">
                                 <div>Producto {{n}}</div>
@@ -75,6 +78,32 @@ defineProps({
                         </div>                        
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section id="especialidades" class="p-5 bg-white shadow">
+            <div class="container sm:w-11/12 xl:w-9/12 mx-auto border-[2px] border-dashed rounded-md py-3 px-5">
+                <h1 class="text-2xl border-b pb-2">Contactanos</h1>
+                <aside class="block italic text-sm my-3">
+                    ¿Dudas, consultas? Dejanos tu mensaje.
+                </aside>
+                <form action="#">
+                    <div class="mb-2">
+                        <InputLabel class="block mb-1" for="input-nombre" value="Tu nombre: *" />
+                        <TextInput id="input-nombre" class="w-full block" placeholder="Juan Perez" />
+                    </div>
+                    <div class="mb-2">
+                        <InputLabel class="block mb-1" for="input-email" value="Tu email: *" />
+                        <TextInput id="input-email" class="w-full block" placeholder="tu@correo.com" />
+                    </div>
+                    <div class="mb-2">
+                        <InputLabel class="block mb-1" for="input-comentario" value="Comentarios: *" />
+                        <textarea class="w-full border border-slate-300 rounded-md resize-none p-2" rows="4" placeholder="Tu comentario..."></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <PrimaryButton>Enviar mensaje</PrimaryButton>
+                    </div>
+                </form>
             </div>
         </section>
     </main>

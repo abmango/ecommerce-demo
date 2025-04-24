@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 </script>
 <template>
-    <header class="w-full bg-white fixed shadow-sm top-0 start-0">
+    <header class="w-full bg-white fixed shadow-sm top-0 start-0 z-30">
         <div class="w-11/12 px-3 flex mx-auto justify-between items-center">
             <Link :href="route('welcome')">
                 <img src="/images/logo.jpg" class="w-[85px]" />
