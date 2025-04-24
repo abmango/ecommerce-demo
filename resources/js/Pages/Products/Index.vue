@@ -20,7 +20,7 @@
       </InertiaLink>
     </div>
 
-    <h1 class="text-2xl font-bold mb-6">Lista de Productos</h1>
+    <h1 class="text-2xl border-b pb-2 font-semibold mb-6">Lista de Productos</h1>
 
     <!-- Vista para Administradores -->
     <div v-if="auth && auth.role === 'admin'">
