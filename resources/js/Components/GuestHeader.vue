@@ -1,5 +1,17 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import { reactive } from 'vue';
+
+const navItems = reactive([
+    { type: 'normal', name : 'Inicio', href : '/' },
+    { type: 'normal', name : 'Nosotros', href : '/' },
+    { type: 'normal', name : 'Especialidades', href : '/' },
+    { type: 'normal', name : 'Contacto', href : '/' },
+    { type: 'normal', name : 'Administracion', href : route('login'), class : 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none' },
+    { type : 'icon', name : 'fas fa-cart-shopping', 
+      href : route('cart.checkout'),
+      class: 'p-2 px-[9px] rounded-full border border-indigo-500 text-indigo-500 hover:bg-indigo-500 hover:text-white'}
+])
 </script>
 <template>
     <header class="w-full bg-white fixed shadow-sm top-0 start-0 z-30">
@@ -7,13 +19,17 @@ import { Link } from '@inertiajs/vue3';
             <Link :href="route('welcome')">
                 <img src="/images/logo.jpg" class="w-[85px]" />
             </Link>
-            <nav class="navigation-items">
-                <Link class="mx-3 hover:border-b-2 hover:border-b-violet-400 hover:text-violet-400" href="/">Inicio</Link>
-                <Link class="mx-3 hover:border-b-2 hover:border-b-violet-400 hover:text-violet-400" href="/">Nosotros</Link>
-                <Link class="mx-3 hover:border-b-2 hover:border-b-violet-400 hover:text-violet-400" href="/">Especialidades</Link>
-                <Link class="mx-3 hover:border-b-2 hover:border-b-violet-400 hover:text-violet-400" href="/">Contacto</Link>
-                <Link class="mx-2 px-2 py-2 hover:duration-150 bg-violet-400 text-white hover:bg-violet-600 hover:ease-in" :href="route('login')">Administracion</Link>
+            <nav class="navigation-items hidden md:block">
+                <Link v-for="item of navItems" :href="item.href" class="mx-3 hover:border-b-2 hover:border-b-indigo-500 hover:text-indigo-500" :class="item.class ?? ''">
+                    <template v-if="item.type == 'normal'">
+                        <span>{{ item.name }}</span>
+                    </template>
+                    <template v-else>
+                        <i :class="item.name"></i>
+                    </template>
+                </Link>
             </nav>
+            <i class="fa-solid fa-bars fa-xl cursor-pointer md:hidden"></i>
         </div>
     </header>
 </template>

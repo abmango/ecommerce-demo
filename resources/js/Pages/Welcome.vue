@@ -77,6 +77,9 @@ defineProps({
                             </div>
                         </div>                        
                     </div>
+                    <div class="col-span-12 justify-center items-center text-center my-3">
+                        <Link :href="route('products.index')" class="border duration-100 border-indigo-500 text-indigo-500 rounded p-2 bg-white">Ver mas productos</Link>
+                    </div>
                 </div>
             </div>
         </section>

@@ -1,5 +1,7 @@
 <template>
-  <div class="container mx-auto py-8">
+  <Head title="Detalle de producto"></Head>
+  <GuestHeader></GuestHeader>
+  <div class="container mx-auto py-8 mt-20">
     <div class="absolute top-0 right-0 mt-4 mr-4">
       <Link href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
       Volver
@@ -35,8 +37,9 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/inertia-vue3';
 import DeleteProduct from './Delete.vue';
+import GuestHeader from '@/Components/GuestHeader.vue';
 
 export default {
   props: {
@@ -46,6 +49,8 @@ export default {
   components: {
     Link,
     DeleteProduct,
+    Head,
+    GuestHeader
   },
   methods: {
     deleteProduct() {

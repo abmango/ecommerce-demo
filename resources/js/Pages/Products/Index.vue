@@ -1,5 +1,7 @@
 <template>
-  <div class="container mx-auto py-8">
+  <Head title="Catalogo de productos"></Head>
+  <GuestHeader></GuestHeader>
+  <div class="container mx-auto py-8 mt-20">
     <div v-if="!auth || (auth && auth.role === 'user')" class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/cart" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Carrito
@@ -54,38 +56,47 @@
 
     <!-- Vista para Usuarios -->
     <div v-else>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         <div 
           v-for="product in products" 
           :key="product.id" 
           :class="{'bg-white p-4 rounded-lg shadow': true, 'opacity-50': product.deleted_at || product.stock == 0}" 
         > 
           <InertiaLink :href="`/products/${product.id}`" class="block" :class="{'pointer-events-none': product.deleted_at}"> 
-            <img :src="product.image" alt="Imagen del producto" class="w-full h-48 object-cover mb-4" />
+            <!-- img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto" class="w-full h-48 object-cover mb-4" / -->
+            <div class="w-full bg-contain bg-no-repeat bg-center h-28" style="background-image: url('/images/logo.jpg');"></div>
           </InertiaLink>
-          <h2 class="font-bold text-lg">{{ product.name }}</h2>
+          <h2 class="first-letter:uppercase font-semibold text-lg">{{ product.name }}</h2>
           <p class="text-gray-500">$ {{ product.price | currency }}</p>
-          <p v-if="product.deleted_at" class="text-red-500 font-semibold">Dado de baja</p>
-          <p v-if="product.stock == 0" class="text-red-500 font-semibold">Sin stock</p>
+          <!-- p v-if="product.deleted_at" class="text-red-500 font-semibold">Dado de baja</p -->         
+          <div class="flex justify-end items-center mt-3">
+            <template v-if="product.stock > 0">
+              <InertiaLink :href="`/products/${product.id}`" class="border border-indigo-500 text-indigo-500 p-2 mx-1 rounded-md">
+                <i class="me-1 fas fa-cart-shopping"></i>
+                <span>Agregar</span>
+              </InertiaLink>
+              <InertiaLink :href="`/products/${product.id}`" class="bg-indigo-500 hover:bg-indigo-700 text-white p-2 rounded-md">
+                <span>Ordenar</span>
+                <i class="fa-solid fa-circle-chevron-right ms-1"></i>
+              </InertiaLink>
+            </template>
+            <template v-else>
+              <p v-if="product.stock == 0" class="text-red-500 font-semibold">Fuera de stock</p>
+            </template>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { Link as InertiaLink } from '@inertiajs/vue3';
+<script setup>
+import GuestHeader from '@/Components/GuestHeader.vue';
+import { Head, Link as InertiaLink } from '@inertiajs/vue3';
 
-export default {
-  props: {
-    products: Array,
-    auth: Object,
-  },
-  components: { InertiaLink },
-  methods: {
-    removeProduct(productId) {
-      this.products = this.products.filter(product => product.id !== productId);
-    },
-  },
-};
+const props = defineProps({
+  products: Array,
+  auth: Object,
+})
+
 </script>
