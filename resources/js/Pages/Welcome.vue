@@ -5,6 +5,24 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { reactive } from 'vue'
+import { useForm } from '@inertiajs/vue3'
+
+const form = useForm({
+  nombre: '',
+  email: '',
+  comentario: '',
+})
+
+const submit = () => {
+  form.post(route('contact.send'), {
+    preserveScroll: true,
+    onSuccess: () => {
+      form.reset()
+    }
+  })
+}
+
 defineProps({
     canLogin: {
         type: Boolean,
@@ -21,8 +39,8 @@ defineProps({
         required: true,
     },
 });
-
 </script>
+
 <template>
     <Head title="Pagina inicial" />
     <GuestHeader />
@@ -84,29 +102,32 @@ defineProps({
             </div>
         </section>
 
-        <section id="especialidades" class="p-5 bg-white shadow">
+        <section id="contactanos" class="p-5 bg-white shadow">
             <div class="container sm:w-11/12 xl:w-9/12 mx-auto border-[2px] border-dashed rounded-md py-3 px-5">
                 <h1 class="text-2xl border-b pb-2">Contactanos</h1>
                 <aside class="block italic text-sm my-3">
                     ¿Dudas, consultas? Dejanos tu mensaje.
                 </aside>
-                <form action="#">
+                <form @submit.prevent="submit">
                     <div class="mb-2">
                         <InputLabel class="block mb-1" for="input-nombre" value="Tu nombre: *" />
-                        <TextInput id="input-nombre" class="w-full block" placeholder="Juan Perez" />
+                        <TextInput id="input-nombre" v-model="form.nombre" class="w-full block" placeholder="Juan Perez" />
+                        <div v-if="form.errors.nombre" class="text-red-500 text-sm">{{ form.errors.nombre }}</div>
                     </div>
                     <div class="mb-2">
                         <InputLabel class="block mb-1" for="input-email" value="Tu email: *" />
-                        <TextInput id="input-email" class="w-full block" placeholder="tu@correo.com" />
+                        <TextInput id="input-email" v-model="form.email" class="w-full block" placeholder="tu@correo.com" />
+                        <div v-if="form.errors.email" class="text-red-500 text-sm">{{ form.errors.email }}</div>
                     </div>
                     <div class="mb-2">
                         <InputLabel class="block mb-1" for="input-comentario" value="Comentarios: *" />
-                        <textarea class="w-full border border-slate-300 rounded-md resize-none p-2" rows="4" placeholder="Tu comentario..."></textarea>
+                        <textarea v-model="form.comentario" class="w-full border border-slate-300 rounded-md resize-none p-2" rows="4" placeholder="Tu comentario..."></textarea>
+                        <div v-if="form.errors.comentario" class="text-red-500 text-sm">{{ form.errors.comentario }}</div>
                     </div>
                     <div class="flex justify-end">
-                        <PrimaryButton>Enviar mensaje</PrimaryButton>
+                        <PrimaryButton :disabled="form.processing">Enviar mensaje</PrimaryButton>
                     </div>
-                </form>
+                </form>                
             </div>
         </section>
     </main>

@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -57,3 +58,6 @@ Route::middleware([
 // No hace falta iniciar sesión para ver los productos
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+// Formulario de contacto
+Route::post('/contactar', [ContactController::class, 'send'])->name('contact.send');
