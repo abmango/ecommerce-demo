@@ -59,7 +59,7 @@ defineProps({
                     </div>
                     <div class="pt-3 col-span-12 md:col-span-6 lg:col-span-8 text-sm">
                         <p class="mb-4">
-                            Desde 1908 la familia Fujiwara elabora dulces wagashi en forma artesanal. Su historia comienza en la prefectura de Hiroshima, 
+                            Desde 1908 la familia Fujihara elabora dulces wagashi en forma artesanal. Su historia comienza en la prefectura de Hiroshima, 
                             bajo la marca 山泉堂 Sansendō, años más tarde parte de la familia se traslada a Paraguay donde comienzan a producir en el año 1958.
                         </p>
                         <p class="mb-4">
@@ -72,7 +72,7 @@ defineProps({
                         </p>
                         <p>
                             La tercera generación de pasteleros encabezada por Tadanobu elaboran manju, nerikiri, kurimanju, yōkan, yomogi mochi, 
-                            geppei, namagashi, anmochi y las populares galletas osenbē mediante técnicas tradicionales utilizando antiguas herramientas yakiin, hoy consideradas reliquias familiares que representan la trayectoria gastronómica de la familia Fujiwara en nuestro pais.
+                            geppei, namagashi, anmochi y las populares galletas osenbē mediante técnicas tradicionales utilizando antiguas herramientas yakiin, hoy consideradas reliquias familiares que representan la trayectoria gastronómica de la familia Fujihara en nuestro pais.
                         </p>
                     </div>
                 </div>
