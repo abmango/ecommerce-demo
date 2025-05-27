@@ -50,6 +50,11 @@ Route::middleware([
     Route::post('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
 
+    // Facturas
+    Route::get('/orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
+    Route::post('/orders/{order}/invoice', [OrderController::class, 'uploadInvoice'])->middleware(\App\Http\Middleware\CheckAdmin::class);
+
+
     // Checkout (compra)
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 

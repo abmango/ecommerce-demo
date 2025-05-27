@@ -42,13 +42,18 @@ class OrderController extends Controller
     {
         $orders = Order::with('user')->get();
 
-        return Inertia::render('Orders/Index', [
-            'orders' => $orders
-        ]);
+        // return Inertia::render('Orders/Index', [
+        //     'orders' => $orders
+        // ]);
+        return Inertia::render('Orders/Index')
+            ->with([
+                'orders' => Order::with('user')->get()
+            ]);
     }
-    public function show($id) {
+    public function show($id)
+    {
         $order = Order::with('items.product')->findOrFail($id);
-        
+
         return Inertia::render('Orders/Show', [
             'order' => $order,
         ]);
@@ -72,5 +77,64 @@ class OrderController extends Controller
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Orden rechazada con éxito.');
+    }
+
+    public function downloadInvoice(Order $order)
+    {
+        if (!$order->approved) {
+            abort(403);
+        }
+
+        $path = storage_path('app/' . $order->factura_path);
+
+        if (!file_exists($path)) {
+            abort(404, 'Factura no encontrada.');
+        }
+
+        return response()->download($path);
+    }
+
+    // public function uploadInvoice(Request $request, Order $order)
+    // {
+    //     $request->validate([
+    //         'invoice' => 'required|file|mimes:pdf|max:2048',
+    //     ]);
+
+    //     $invoice = $request->file('invoice');
+
+    //     // Generamos el nombre correcto según la convención
+    //     $numFactura = str_pad($order->id, 8, '0', STR_PAD_LEFT);
+    //     $filename = "20150978387_011_00005_{$numFactura}.pdf";
+
+    //     // Guardamos en 'public/invoices'
+    //     $path = $invoice->storeAs('invoices', $filename, 'public');
+
+    //     // Guardamos el path en la base de datos
+    //     $order->invoice_path = $path;
+    //     $order->save();
+
+    //     return back()->with('success', 'Factura cargada exitosamente.');
+    // }
+
+    public function uploadInvoice(Request $request, Order $order)
+    {
+        if (!$order->exists) {
+            abort(404, 'Orden no encontrada.');
+        }
+        
+        $request->validate([
+            'invoice' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
+        $file = $request->file('invoice');
+
+        $name = "20150978387_011_00005_" . str_pad($order->id, 8, '0', STR_PAD_LEFT) . ".pdf";
+
+        $path = $file->storeAs('invoices', $name, 'public');
+
+        $order->invoice_path = $path;
+        $order->save();
+
+        return back()->with('success', 'Factura subida correctamente.');
     }
 }
