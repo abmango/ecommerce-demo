@@ -1,6 +1,9 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import { reactive, ref, onMounted } from 'vue'
+import { usePage } from '@inertiajs/vue3'
+
+const page = usePage()
 
 function smoothScrollTo(targetEl, duration = 800) {
     const target = document.querySelector(targetEl)
@@ -30,18 +33,34 @@ function smoothScrollTo(targetEl, duration = 800) {
     requestAnimationFrame(animation)
 }
 
-const handleAnchorClick = (e, href) => {
-    e.preventDefault()
-    const anchor = href.split('#')[1]
-    if (anchor) smoothScrollTo(`#${anchor}`)
-    isMenuVisible.value = false
+function handleAnchorClick(href) {
+    const isOnWelcomePage = page.url === '/'
+
+    if (isOnWelcomePage) {
+        // Scroll suave dentro de la misma página
+        smoothScrollTo(href)
+    } else {
+        // Redirigir con Inertia si estamos en otra ruta
+        window.location.href = href
+    }
 }
 
+function handleInicioClick() {
+    if (page.url === '/') {
+        // Ya estás en la página de bienvenida
+        smoothScrollTo('body');
+    } else {
+        // Redirigí a /
+        window.location.href = '/';
+    }
+}
+
+
 const navItems = reactive([
-    { type: 'top', name: 'Inicio', href: '#' },
-    { type: 'anchor', name: 'Nosotros', href: '/#nosotros' },
-    { type: 'anchor', name: 'Especialidades', href: '/#especialidades' },
-    { type: 'anchor', name: 'Contacto', href: '/#contactanos' },
+    { type: 'inicio', name: 'Inicio' },
+    { type: 'anchor', name: 'Nosotros', href: '#nosotros' },
+    { type: 'anchor', name: 'Especialidades', href: '#especialidades' },
+    { type: 'anchor', name: 'Contacto', href: '#contactanos' },
     {
         type: 'normal',
         name: 'Ingresar',
@@ -71,22 +90,23 @@ const toggleMenu = () => {
             </Link>
             <nav class="navigation-items hidden md:block">
                 <template v-for="item of navItems">
-                    <a v-if="item.type === 'anchor' || item.type === 'top'" :href="item.href"
-                        class="mx-3 hover:underline cursor-pointer" :class="item.class ?? ''" @click.prevent="() => {
-                            isMenuVisible = false;
-                            if (item.type === 'top') {
-                                smoothScrollTo('body');
-                            } else {
-                                const hash = item.href.split('#')[1];
-                                smoothScrollTo(`#${hash}`);
-                            }
-                        }">
+                    <!-- Botón Inicio -->
+                    <a v-if="item.type === 'inicio'" @click="handleInicioClick"
+                        class="mx-3 hover:underline cursor-pointer">
                         {{ item.name }}
                     </a>
 
+                    <!-- Anclas internas -->
+                    <a v-else-if="item.type === 'anchor'" :href="item.href" class="mx-3 hover:underline cursor-pointer"
+                        :class="item.class ?? ''" @click.prevent="() => handleAnchorClick(item.href)">
+                        {{ item.name }}
+                    </a>
+
+
+                    <!-- Resto de enlaces con <Link> -->
                     <Link v-else :href="item.href" class="mx-3" :class="item.class ?? ''"
                         @click="isMenuVisible = false">
-                    <template v-if="item.type == 'normal'">
+                    <template v-if="item.type === 'normal'">
                         <span>{{ item.name }}</span>
                     </template>
                     <template v-else>
@@ -94,6 +114,7 @@ const toggleMenu = () => {
                     </template>
                     </Link>
                 </template>
+
             </nav>
             <i class="fa-solid fa-bars fa-xl cursor-pointer md:hidden" @click="toggleMenu"></i>
         </div>
