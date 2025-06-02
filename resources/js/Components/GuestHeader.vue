@@ -37,20 +37,16 @@ function handleAnchorClick(href) {
     const isOnWelcomePage = page.url === '/'
 
     if (isOnWelcomePage) {
-        // Scroll suave dentro de la misma página
         smoothScrollTo(href)
     } else {
-        // Redirigir con Inertia si estamos en otra ruta
         window.location.href = href
     }
 }
 
 function handleInicioClick() {
     if (page.url === '/') {
-        // Ya estás en la página de bienvenida
         smoothScrollTo('body');
     } else {
-        // Redirigí a /
         window.location.href = '/';
     }
 }
@@ -70,7 +66,7 @@ const navItems = reactive([
     {
         type: 'icon',
         name: 'fas fa-cart-shopping',
-        href: route('cart.checkout'),
+        href: route('cart.index'),
         class: 'text-indigo-500',
         text: 'Mi carrito'
     }
@@ -101,7 +97,6 @@ const toggleMenu = () => {
                         :class="item.class ?? ''" @click.prevent="() => handleAnchorClick(item.href)">
                         {{ item.name }}
                     </a>
-
 
                     <!-- Resto de enlaces con <Link> -->
                     <Link v-else :href="item.href" class="mx-3" :class="item.class ?? ''"
