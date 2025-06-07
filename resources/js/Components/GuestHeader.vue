@@ -34,22 +34,41 @@ function smoothScrollTo(targetEl, duration = 800) {
 }
 
 function handleAnchorClick(href) {
-    const isOnWelcomePage = page.url === '/'
+    const isOnWelcomePage = page.url.startsWith('/')
+
+    const targetId = href.split('#')[1]
+    const targetUrl = `/?scrollTo=${targetId}`
 
     if (isOnWelcomePage) {
-        smoothScrollTo(href)
+        // Small scroll into the same page
+        smoothScrollTo(`#${targetId}`)
     } else {
-        window.location.href = href
+        // Redirect adding the parameter
+        window.location.href = targetUrl
     }
 }
 
+
 function handleInicioClick() {
-    if (page.url === '/') {
+    if (window.location.pathname === '/' || window.location.pathname === '/welcome') {
         smoothScrollTo('body');
     } else {
         window.location.href = '/';
     }
 }
+
+
+function handleAnchorRedirect(href) {
+    const targetId = href.replace('#', '');
+    const isOnWelcomePage = window.location.pathname === '/' || window.location.pathname === '/welcome';
+
+    if (isOnWelcomePage) {
+        smoothScrollTo(`#${targetId}`);
+    } else {
+        window.location.href = `/?scrollTo=${targetId}`;
+    }
+}
+
 
 
 const navItems = reactive([
@@ -85,20 +104,21 @@ const toggleMenu = () => {
             <img src="/images/logo.jpg" class="w-[85px]" />
             </Link>
             <nav class="navigation-items hidden md:block">
-                <template v-for="item of navItems">
-                    <!-- Botón Inicio -->
-                    <a v-if="item.type === 'inicio'" @click="handleInicioClick"
-                        class="mx-3 hover:underline cursor-pointer">
+                <template v-for="item in navItems" :key="item.name">
+                    <!-- Inicio button -->
+                    <a v-if="item.type === 'inicio'" href="javascript:void(0)" @click.prevent="handleInicioClick"
+                        class="mx-3 hover:underline cursor-pointer" :class="item.class ?? ''">
                         {{ item.name }}
                     </a>
 
-                    <!-- Anclas internas -->
-                    <a v-else-if="item.type === 'anchor'" :href="item.href" class="mx-3 hover:underline cursor-pointer"
-                        :class="item.class ?? ''" @click.prevent="() => handleAnchorClick(item.href)">
+                    <!-- Buttons with scroll to sections -->
+                    <a v-else-if="item.type === 'anchor'" href="javascript:void(0)"
+                        @click.prevent="() => handleAnchorRedirect(item.href)"
+                        class="mx-3 hover:underline cursor-pointer" :class="item.class ?? ''">
                         {{ item.name }}
                     </a>
 
-                    <!-- Resto de enlaces con <Link> -->
+                    <!-- Normal buttons and ícons -->
                     <Link v-else :href="item.href" class="mx-3" :class="item.class ?? ''"
                         @click="isMenuVisible = false">
                     <template v-if="item.type === 'normal'">
@@ -109,20 +129,34 @@ const toggleMenu = () => {
                     </template>
                     </Link>
                 </template>
-
             </nav>
             <i class="fa-solid fa-bars fa-xl cursor-pointer md:hidden" @click="toggleMenu"></i>
         </div>
+
+        <!-- Burger menu -->
         <nav class="navigation-items block md:hidden border-t">
-            <Link v-for="item of navItems" :href="item.href" class="mx-3 block py-2 mb-1" :class="item.class ?? ''"
-                v-if="isMenuVisible">
-            <template v-if="item.type == 'normal'">
-                <span>{{ item.name }}</span>
+            <template v-for="item in navItems" :key="item.name">
+                <a v-if="item.type === 'inicio'" href="javascript:void(0)" @click.prevent="handleInicioClick"
+                    class="mx-3 block py-2 mb-1" :class="item.class ?? ''">
+                    {{ item.name }}
+                </a>
+
+                <a v-else-if="item.type === 'anchor'" href="javascript:void(0)"
+                    @click.prevent="() => handleAnchorClick(item.href)" class="mx-3 block py-2 mb-1"
+                    :class="item.class ?? ''">
+                    {{ item.name }}
+                </a>
+
+                <Link v-else :href="item.href" class="mx-3 block py-2 mb-1" :class="item.class ?? ''"
+                    @click="isMenuVisible = false">
+                <template v-if="item.type === 'normal'">
+                    <span>{{ item.name }}</span>
+                </template>
+                <template v-else>
+                    <i :class="item.name"></i> {{ item.text }}
+                </template>
+                </Link>
             </template>
-            <template v-else>
-                <i :class="item.name"></i> {{ item.text }}
-            </template>
-            </Link>
         </nav>
     </header>
 </template>

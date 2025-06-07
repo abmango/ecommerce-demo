@@ -7,6 +7,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { reactive } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import { onMounted } from 'vue'
 
 const form = useForm({
   nombre: '',
@@ -39,12 +40,55 @@ defineProps({
         required: true,
     },
 });
+
+function smoothScrollTo(targetEl, duration = 800) {
+  const target = document.querySelector(targetEl);
+  if (!target) return;
+
+  const headerOffset = 90;
+  const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+  const startPosition = window.pageYOffset;
+  const distance = targetPosition - startPosition;
+  let startTime = null;
+
+  function animation(currentTime) {
+    if (startTime === null) startTime = currentTime;
+    const timeElapsed = currentTime - startTime;
+    const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+    window.scrollTo(0, run);
+    if (timeElapsed < duration) requestAnimationFrame(animation);
+  }
+
+  function easeInOutQuad(t, b, c, d) {
+    t /= d / 2;
+    if (t < 1) return c / 2 * t * t + b;
+    t--;
+    return -c / 2 * (t * (t - 2) - 1) + b;
+  }
+
+  requestAnimationFrame(animation);
+}
+
+onMounted(() => {
+  const url = new URL(window.location.href)
+  const section = url.searchParams.get('scrollTo')
+
+  if (section) {
+    const el = document.getElementById(section)
+    if (el) {
+      // Pequeño delay para asegurar que todo esté renderizado
+      setTimeout(() => {
+        smoothScrollTo(`#${section}`)
+      }, 300)
+    }
+  }
+})
 </script>
 
 <template>
     <Head title="Pagina inicial" />
     <GuestHeader />
-    <main class="mt-[86px]">
+    <main class="mt-[86px]" >
         <section id="welcome" class="w-full h-72 bg-slate-800 flex justify-center items-center">
             <span class="text-2xl text-center text-white">
                 Slider de presentacion
