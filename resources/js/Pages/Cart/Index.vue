@@ -1,10 +1,7 @@
 <template>
-  <div class="container mx-auto py-8">
-    <div class="absolute top-0 right-0 mt-4 mr-4">
-      <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Ver más productos
-      </InertiaLink>
-    </div>
+  <GuestHeader />
+  <div class="container mx-auto pt-24">
+    
 
     <h1 class="text-2xl font-bold mb-6 text-center">Carrito de Compras</h1>
 
@@ -50,90 +47,94 @@
     </div>
     <div v-else>
       <p class="text-center text-gray-500">El carrito está vacío.</p>
+
+    </div>
+    <div class="flex justify-end mb-4">
+      
+      <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 rounded">
+        Agregar más productos
+      </InertiaLink>
     </div>
   </div>
 </template>
 
-<script>
-import { Link as InertiaLink } from '@inertiajs/vue3';
+<script setup>
+import { computed } from 'vue';
+import { router, Link as InertiaLink } from '@inertiajs/vue3';
+import GuestHeader from '../../Components/GuestHeader.vue';
 import axios from 'axios';
 
-export default {
-  props: {
-    cart: Array,
-    auth: Object,
-  },
-  computed: {
-    total() {
-      return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    }
-  },
+// Props
+const props = defineProps({
+  cart: Array,
+  auth: Object,
+});
 
-  components: { InertiaLink },
-  methods: {
-    updateQuantity(id, quantity) {
-      if (quantity < 1) {
-        alert('La cantidad debe ser al menos 1');
-        this.$inertia.reload();
-        return;
-      }
-      console.log('Actualizando producto con ID:', id, 'Cantidad:', quantity);
-      axios.post(`/cart/update/${id}`, { quantity: quantity })
-        .then(response => {
-          console.log('Update response:', response);
-          if (response.data.success) {
-            this.$inertia.reload();
-          }
-          else {
-            alert('Error al actualizar la cantidad: ' + response.data.message);
-            this.$inertia.reload();
-          }
-        })
-        .catch(error => {
-          if (error.response) {
-            console.error('Error en la petición:', error.response.data);
-            alert('Error al actualizar la cantidad: ' + error.response.data.message);
-            this.$inertia.reload();
-          } else if (error.request) {
-            console.error('No se recibió respuesta del servidor:', error.request);
-          } else {
-            console.error('Error al configurar la petición:', error.message);
-          }
-        });
-    },
+// Computed
+const total = computed(() => {
+  return props.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+});
 
-    removeFromCart(id) {
-      axios.delete(`/cart/remove/${id}`)
-        .then(response => {
-          if (response.data.success) {
-            this.$inertia.reload();
-          } else {
-            console.error('Error al eliminar el producto:', response.data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Error en la petición:', error);
-        });
-    },
-
-    processPurchase() {
-
-      if (!this.auth || !this.auth.user) {
-        alert('Debes iniciar sesión para realizar la compra.');
-        this.$inertia.visit('/login');
-        return;
-      }
-      console.log('Realizando orden de compra...');
-      axios.post('/cart/checkout')
-        .then(response => {
-          alert('¡Orden de compra realizada! La misma ha sido enviada a los vendedores.');
-            this.$inertia.visit('/products');
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+// Métodos
+function updateQuantity(id, quantity) {
+  if (quantity < 1) {
+    alert('La cantidad debe ser al menos 1');
+    router.reload();
+    return;
   }
+  console.log('Actualizando producto con ID:', id, 'Cantidad:', quantity);
+  axios.post(`/cart/update/${id}`, { quantity: quantity })
+    .then(response => {
+      console.log('Update response:', response);
+      if (response.data.success) {
+        router.reload();
+      } else {
+        alert('Error al actualizar la cantidad: ' + response.data.message);
+        router.reload();
+      }
+    })
+    .catch(error => {
+      if (error.response) {
+        console.error('Error en la petición:', error.response.data);
+        alert('Error al actualizar la cantidad: ' + error.response.data.message);
+        router.reload();
+      } else if (error.request) {
+        console.error('No se recibió respuesta del servidor:', error.request);
+      } else {
+        console.error('Error al configurar la petición:', error.message);
+      }
+    });
+}
+
+function removeFromCart(id) {
+  axios.delete(`/cart/remove/${id}`)
+    .then(response => {
+      if (response.data.success) {
+        router.reload();
+      } else {
+        console.error('Error al eliminar el producto:', response.data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error en la petición:', error);
+    });
+}
+
+function processPurchase() {
+  if (!props.auth || !props.auth.user) {
+    alert('Debes iniciar sesión para realizar la compra.');
+    router.visit('/login');
+    return;
+  }
+  console.log('Realizando orden de compra...');
+  axios.post('/cart/checkout')
+    .then(response => {
+      alert('¡Orden de compra realizada! La misma ha sido enviada a los vendedores.');
+      router.visit('/products');
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 </script>
 

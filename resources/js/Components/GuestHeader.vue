@@ -2,8 +2,11 @@
 import { Link } from '@inertiajs/vue3'
 import { reactive, ref, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
+import { computed } from 'vue'
 
 const page = usePage()
+
+const isLoggedIn = computed(() => !!page.props.auth.user)
 
 function smoothScrollTo(targetEl, duration = 800) {
     const target = document.querySelector(targetEl)
@@ -69,19 +72,26 @@ function handleAnchorRedirect(href) {
     }
 }
 
-
-
 const navItems = reactive([
     { type: 'inicio', name: 'Inicio' },
     { type: 'anchor', name: 'Nosotros', href: '#nosotros' },
     { type: 'anchor', name: 'Especialidades', href: '#especialidades' },
     { type: 'anchor', name: 'Contacto', href: '#contactanos' },
-    {
-        type: 'normal',
-        name: 'Ingresar',
-        href: route('login'),
-        class: 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
-    },
+    // page.props.auth && page.props.auth.user
+    isLoggedIn.value
+        ? {
+            type: 'normal',
+            name: 'Dashboard',
+            href: route('dashboard'),
+            class: 'bg-green-600 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
+        }
+        : {
+            type: 'normal',
+            name: 'Ingresar',
+            href: route('login'),
+            class: 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
+        },
+    
     {
         type: 'icon',
         name: 'fas fa-cart-shopping',
