@@ -1,5 +1,6 @@
 <template>
-  <div class="container mx-auto py-8">
+  <GuestHeader />
+  <div class="container mx-auto py-8 pt-24">
     <div class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Volver a productos
@@ -57,29 +58,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import GuestHeader from '@/Components/GuestHeader.vue'
 import { Link as InertiaLink, router } from '@inertiajs/vue3'
+import { defineProps } from 'vue'
 
-export default {
-  props: {
-    orders: Array
-  },
-  components: { InertiaLink },
-  methods: {
-    uploadInvoice(orderId, event) {
-      const file = event.target.files[0]
-      if (!file) return
+const props = defineProps({
+  orders: Array
+})
 
-      const formData = new FormData()
-      formData.append('invoice', file)
+function uploadInvoice(orderId, event) {
+  const file = event.target.files[0]
+  if (!file) return
 
-      router.post(`/orders/${orderId}/invoice`, formData, {
-        forceFormData: true,
-        onSuccess: () => {
-          router.reload({ only: ['orders'] })
-        }
-      })
+  const formData = new FormData()
+  formData.append('invoice', file)
+
+  router.post(`/orders/${orderId}/invoice`, formData, {
+    forceFormData: true,
+    onSuccess: () => {
+      router.reload({ only: ['orders'] })
     }
-  }
+  })
 }
 </script>

@@ -6,7 +6,10 @@ import { computed } from 'vue'
 
 const page = usePage()
 
-const isLoggedIn = computed(() => !!page.props.auth.user)
+const auth = computed(() => page.props.auth || { user: null, role: null });
+
+const isLoggedIn = computed(() => !!auth.value.user);
+const isAdmin = computed(() => auth.value.user?.role === 'admin');
 
 function smoothScrollTo(targetEl, duration = 800) {
     const target = document.querySelector(targetEl)
@@ -51,7 +54,6 @@ function handleAnchorClick(href) {
     }
 }
 
-
 function handleInicioClick() {
     if (window.location.pathname === '/' || window.location.pathname === '/welcome') {
         smoothScrollTo('body');
@@ -59,7 +61,6 @@ function handleInicioClick() {
         window.location.href = '/';
     }
 }
-
 
 function handleAnchorRedirect(href) {
     const targetId = href.replace('#', '');
@@ -77,29 +78,47 @@ const navItems = reactive([
     { type: 'anchor', name: 'Nosotros', href: '#nosotros' },
     { type: 'anchor', name: 'Especialidades', href: '#especialidades' },
     { type: 'anchor', name: 'Contacto', href: '#contactanos' },
-    // page.props.auth && page.props.auth.user
-    isLoggedIn.value
-        ? {
+]);
+
+// Siempre mostrar carrito
+navItems.push({
+    type: 'icon',
+    name: 'fas fa-cart-shopping',
+    href: route('cart.index'),
+    class: 'text-indigo-500',
+    text: 'Mi carrito'
+});
+
+if (isLoggedIn.value) {
+    navItems.push({
+        type: 'normal',
+        name: 'Dashboard',
+        href: route('dashboard'),
+        class: 'bg-green-600 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
+    });
+
+    if (isAdmin.value) {
+        // Quitar el carrito y poner Órdenes en su lugar
+        const cartIndex = navItems.findIndex(item => item.href === route('cart.index'));
+        if (cartIndex !== -1) navItems.splice(cartIndex, 1);
+
+        navItems.push({
             type: 'normal',
-            name: 'Dashboard',
-            href: route('dashboard'),
-            class: 'bg-green-600 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
-        }
-        : {
-            type: 'normal',
-            name: 'Ingresar',
-            href: route('login'),
-            class: 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
-        },
-    
-    {
-        type: 'icon',
-        name: 'fas fa-cart-shopping',
-        href: route('cart.index'),
-        class: 'text-indigo-500',
-        text: 'Mi carrito'
+            name: 'Órdenes',
+            href: route('orders.index'),
+            class: 'bg-red-600 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
+        });
     }
-])
+} else {
+    navItems.push({
+        type: 'normal',
+        name: 'Ingresar',
+        href: route('login'),
+        class: 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
+    });
+}
+
+
 
 const isMenuVisible = ref(false)
 const toggleMenu = () => {

@@ -42,9 +42,6 @@ class OrderController extends Controller
     {
         $orders = Order::with('user')->get();
 
-        // return Inertia::render('Orders/Index', [
-        //     'orders' => $orders
-        // ]);
         return Inertia::render('Orders/Index')
             ->with([
                 'orders' => Order::with('user')->get()

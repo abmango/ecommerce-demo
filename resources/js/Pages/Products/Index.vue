@@ -97,6 +97,7 @@ import { Head, Link as InertiaLink } from '@inertiajs/vue3';
 const props = defineProps({
   products: Array,
   auth: Object,
+  isAdmin: Boolean,
 })
 
 </script>

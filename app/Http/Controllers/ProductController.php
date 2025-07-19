@@ -18,7 +18,7 @@ class ProductController extends Controller
         $products = Product::withTrashed()->get();
         return Inertia::render('Products/Index', [
             'products' => $products,
-            'auth' => auth()->user(),
+            //'auth' => auth()->user(),
         ]);
     }
 
@@ -70,7 +70,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return Inertia::render('Products/Show', [
             'product' => $product,
-            'auth' => auth()->user(),
+            //'auth' => auth()->user(),
         ]);
     }
 
@@ -103,7 +103,7 @@ class ProductController extends Controller
         ]);
 
         $product->update($request->all());
-        
+
         return Inertia::render('Products/Show', ['product' => $product]);
     }
 

@@ -40,9 +40,10 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user() ? [
                     'id' => $request->user()->id,
                     'name' => $request->user()->name,
-                    // otros campos que quieras exponer
+                    'role' => $request->user()->role,
                 ] : null,
             ],
         ]);
     }
+
 }

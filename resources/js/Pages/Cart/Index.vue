@@ -1,8 +1,6 @@
 <template>
   <GuestHeader />
   <div class="container mx-auto pt-24">
-    
-
     <h1 class="text-2xl font-bold mb-6 text-center">Carrito de Compras</h1>
 
     <div v-if="cart.length > 0" class="overflow-x-auto">
@@ -50,7 +48,7 @@
 
     </div>
     <div class="flex justify-end mb-4">
-      
+
       <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 rounded">
         Agregar más productos
       </InertiaLink>
@@ -75,7 +73,7 @@ const total = computed(() => {
   return props.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 });
 
-// Métodos
+// Methods
 function updateQuantity(id, quantity) {
   if (quantity < 1) {
     alert('La cantidad debe ser al menos 1');
@@ -126,26 +124,28 @@ function processPurchase() {
     router.visit('/login');
     return;
   }
-  console.log('Realizando orden de compra...');
-  axios.post('/cart/checkout')
-    .then(response => {
+  router.post('/cart/checkout', {}, {
+    onSuccess: () => {
       alert('¡Orden de compra realizada! La misma ha sido enviada a los vendedores.');
       router.visit('/products');
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    },
+    onError: (errors) => {
+      console.error(errors);
+      alert('Error al procesar la orden.');
+    }
+  });
 }
+
 </script>
 
 <style scoped>
-/* Estilo para las tablas */
+/* Style for tables */
 table {
   border-collapse: collapse;
   width: 100%;
 }
 
-/* Estilo para las celdas de la tabla */
+/* Style for cells */
 th,
 td {
   text-align: center;
@@ -153,23 +153,23 @@ td {
   border: 1px solid #ddd;
 }
 
-/* Estilo para los encabezados de la tabla */
+/* Style for headers */
 thead th {
   background-color: #f2f2f2;
   font-weight: bold;
 }
 
-/* Fondo diferente para filas pares */
+/* Background for even cells */
 tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-/* Estilo para el hover de las filas */
+/* Style for hover of rows */
 tbody tr:hover {
   background-color: #f1f1f1;
 }
 
-/* Estilo para los botones */
+/* Style for buttons */
 button {
   transition: background-color 0.3s ease;
 }
