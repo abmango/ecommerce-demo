@@ -2,6 +2,7 @@
   <GuestHeader />
   <Head title="Catalogo de productos"></Head>
   <div class="container mx-auto py-8 mt-20">
+    <!--
     <div v-if="!auth || (auth && auth.role === 'user')" class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/cart" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Carrito
@@ -13,8 +14,9 @@
         Órdenes de compra
       </InertiaLink>
     </div>
+    -->
 
-    <div v-if="auth && auth.role === 'admin'" class="absolute top-0 left-0 mt-4 mr-4">
+    <div v-if="auth && auth.user.role === 'admin'" class="absolute top-0 left-0 mt-4 mr-4">
       <InertiaLink href="/products/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Agregar producto
       </InertiaLink>
@@ -23,7 +25,8 @@
     <h1 class="text-2xl border-b pb-2 font-semibold mb-6">Lista de Productos</h1>
 
     <!-- Vista para Administradores -->
-    <div v-if="auth && auth.role === 'admin'">
+    <div v-if="auth && auth.user.role === 'admin'">
+
       <table class="min-w-full border border-gray-300">
         <thead>
           <tr>
