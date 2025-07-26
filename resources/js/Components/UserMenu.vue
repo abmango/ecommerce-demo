@@ -1,6 +1,6 @@
 <template>
   <div class="ms-3 relative">
-    <Dropdown align="right" width="48">
+    <Dropdown align="align" width="48">
       <template #trigger>
         <button v-if="$page.props.jetstream.managesProfilePhotos"
                 class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
@@ -60,4 +60,11 @@ const form = useForm({})
 const logout = () => {
   form.post(route('logout'))
 }
+
+defineProps({
+  align: {
+    type: String,
+    default: 'right'  // Valor por defecto
+  }
+});
 </script>
