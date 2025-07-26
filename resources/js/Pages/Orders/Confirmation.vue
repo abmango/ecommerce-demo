@@ -1,4 +1,5 @@
 <template>
+  <GuestHeader />
   <div class="container mx-auto py-8 pt-24 max-w-lg">
     <h1 class="text-4xl font-bold mb-4">¡Orden realizada con éxito!</h1>
     <p class="text-xl text-gray-900 mb-6">
@@ -20,6 +21,7 @@
 </template>
 
 <script setup>
+import GuestHeader from '@/Components/GuestHeader.vue';
 import { usePage, router } from '@inertiajs/vue3'
 
 const page = usePage()
