@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\CartItem;
@@ -18,7 +19,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $request->total,
-                'status' => 'pendiente',
+                'status' => OrderStatusEnum::PENDIENTE,
             ]);
 
             $cartItems = CartItem::where('user_id', auth()->id())->get();
@@ -66,7 +67,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = 'confirmada';
+        $order->status = OrderStatusEnum::CONFIRMADA;
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Orden confirmada con éxito.');
@@ -76,7 +77,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = 'rechazada';
+        $order->status = OrderStatusEnum::RECHAZADA;
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Orden rechazada con éxito.');
