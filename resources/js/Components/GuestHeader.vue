@@ -156,7 +156,7 @@ if (isLoggedIn.value) {
                         </Link>
                     </template>
                     <!-- Dashboard con UserMenu -->
-                    <UserMenu align="right">
+                    <UserMenu v-if=isLoggedIn align="right">
                         <template #trigger>
                             <button
                                 class="bg-green-600 text-white p-2 rounded-sm hover:text-white hover:border-none w-auto">
@@ -195,13 +195,14 @@ if (isLoggedIn.value) {
                 </template>
                 </Link>
             </template>
-            <UserMenu align="left">
-                <template #trigger>
-                    <button class="bg-green-600 text-white p-2 rounded-sm hover:text-white hover:border-none w-auto">
-                        Dashboard
-                    </button>
-                </template>
-            </UserMenu>
+                <UserMenu v-if=isLoggedIn align="left">
+                    <template #trigger>
+                        <button
+                            class="bg-green-600 text-white p-2 rounded-sm hover:text-white hover:border-none w-auto">
+                            Dashboard
+                        </button>
+                    </template>
+                </UserMenu>
         </nav>
     </header>
 </template>
