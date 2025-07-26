@@ -1,5 +1,5 @@
 <template>
-    <div class="p-1 border rounded-md" :class="statusStyle">
+    <div class="p-1 rounded-md" :class="statusStyle">
         {{ caption }}
     </div>
 </template>
@@ -15,8 +15,8 @@ const statusStyle = computed( () => {
     if(props.status == 'pendiente')
         return 'text-sky-700 bg-sky-200'
     else if(props.status == 'confirmada')
-        return 'text-green-700 bg-green-200'    
+        return 'text-green-700 bg-green-100'    
     else
-        return 'text-red-700 bg-red-200'
+        return 'text-red-700 bg-red-100'
 })
 </script>
