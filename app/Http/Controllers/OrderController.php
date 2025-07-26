@@ -19,7 +19,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $request->total,
-                'status' => OrderStatusEnum::PENDIENTE,
+                'status' => OrderStatusEnum::PENDIENTE['key'],
             ]);
 
             $cartItems = CartItem::where('user_id', auth()->id())->get();
@@ -43,12 +43,15 @@ class OrderController extends Controller
     {
         $user = auth()->user();
 
-        $orders = $user->role==='admin'
-            ? Order::with('user')->get()
-            : Order::with('user')->where('user_id', $user->id)->get();
+        $ordersQuery = $user->role==='admin'
+            ? Order::with(['user', 'items'])
+            : Order::with(['user', 'items'])->where('user_id', $user->id);
+
+        $orders = $ordersQuery->get();
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
+            'ordersStatuses' => OrderStatusEnum::all(),
             'auth' => [
                 'user' => $user
             ]
@@ -56,7 +59,7 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('items.product')->findOrFail($id);
+        $order = Order::with('items')->findOrFail($id);
 
         return Inertia::render('Orders/Show', [
             'order' => $order,
@@ -67,7 +70,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = OrderStatusEnum::CONFIRMADA;
+        $order->status = OrderStatusEnum::CONFIRMADA['key'];
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Orden confirmada con éxito.');
@@ -77,7 +80,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = OrderStatusEnum::RECHAZADA;
+        $order->status = OrderStatusEnum::RECHAZADA['key'];
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Orden rechazada con éxito.');
@@ -97,28 +100,6 @@ class OrderController extends Controller
 
         return response()->download($path);
     }
-
-    // public function uploadInvoice(Request $request, Order $order)
-    // {
-    //     $request->validate([
-    //         'invoice' => 'required|file|mimes:pdf|max:2048',
-    //     ]);
-
-    //     $invoice = $request->file('invoice');
-
-    //     // Generamos el nombre correcto según la convención
-    //     $numFactura = str_pad($order->id, 8, '0', STR_PAD_LEFT);
-    //     $filename = "20150978387_011_00005_{$numFactura}.pdf";
-
-    //     // Guardamos en 'public/invoices'
-    //     $path = $invoice->storeAs('invoices', $filename, 'public');
-
-    //     // Guardamos el path en la base de datos
-    //     $order->invoice_path = $path;
-    //     $order->save();
-
-    //     return back()->with('success', 'Factura cargada exitosamente.');
-    // }
 
     public function uploadInvoice(Request $request, Order $order)
     {
