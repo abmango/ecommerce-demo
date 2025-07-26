@@ -40,12 +40,18 @@ class OrderController extends Controller
 
     public function index()
     {
-        $orders = Order::with('user')->get();
+        $user = auth()->user();
 
-        return Inertia::render('Orders/Index')
-            ->with([
-                'orders' => Order::with('user')->get()
-            ]);
+        $orders = $user->role==='admin'
+            ? Order::with('user')->get()
+            : Order::with('user')->where('user_id', $user->id)->get();
+
+        return Inertia::render('Orders/Index', [
+            'orders' => $orders,
+            'auth' => [
+                'user' => $user
+            ]
+        ]);
     }
     public function show($id)
     {
@@ -118,7 +124,7 @@ class OrderController extends Controller
         if (!$order->exists) {
             abort(404, 'Orden no encontrada.');
         }
-        
+
         $request->validate([
             'invoice' => 'required|file|mimes:pdf|max:2048',
         ]);

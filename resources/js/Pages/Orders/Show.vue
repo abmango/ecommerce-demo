@@ -5,6 +5,7 @@
         Volver a las órdenes
       </InertiaLink>
     </div>
+    
     <h1 class="text-2xl font-bold mb-6">Detalles de la Orden #{{ order.id }}</h1>
 
     <p class="mb-4"><strong>Total:</strong> ${{ order.total }}</p>
@@ -19,20 +20,26 @@
       </ul>
     </div>
 
-    <!-- Formulario para confirmar la orden -->
-    <div v-if="order.status === 'pendiente'" class="flex space-x-4 mt-4">
-      <form @submit.prevent="confirmOrder" method="POST">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Confirmar
-        </button>
-      </form>
+    
 
-      <!-- Formulario para rechazar la orden -->
-      <form @submit.prevent="rejectOrder" method="POST">
-        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-          Rechazar
-        </button>
-      </form>
+
+    <!-- Sólo para los administradores -->
+    <div v-if="$page.props.auth?.user?.role === 'admin'">
+      <!-- Formulario para confirmar la orden -->
+      <div v-if="order.status === 'pendiente'" class="flex space-x-4 mt-4">
+        <form @submit.prevent="confirmOrder" method="POST">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Confirmar
+          </button>
+        </form>
+
+        <!-- Formulario para rechazar la orden -->
+        <form @submit.prevent="rejectOrder" method="POST">
+          <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            Rechazar
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </template>

@@ -44,8 +44,8 @@ Route::middleware([
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(\App\Http\Middleware\CheckAdmin::class);
 
     // Órdenes de compra
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware(\App\Http\Middleware\CheckAdmin::class);;
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show')->middleware(\App\Http\Middleware\CheckAdmin::class);;
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/;;
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/;;
     
     Route::post('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
