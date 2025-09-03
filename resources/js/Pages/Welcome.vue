@@ -4,7 +4,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { reactive } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 
@@ -12,18 +12,20 @@ const form = useForm({
     nombre: '',
     email: '',
     comentario: '',
-})
+});
 
-const phrases = [
+const slides = ref([
     "Bienvenido a nuestra tienda online",
-    "Productos exclusivos para vos",
-    "Envíos rápidos y seguros",
+    "Primera empresa de productos artesanales japoneses en Argentina",
+    "Envíos a todo el país",
     "Ofertas que no te podés perder"
-]
+]);
 
-const currentIndex = ref(0)
 
-const currentPhrase = computed(() => phrases[currentIndex.value])
+const currentIndex = ref(0);
+let interval = null;
+
+//const currentPhrase = computed(() => phrases[currentIndex.value])
 
 const submit = () => {
     form.post(route('contact.send'), {
@@ -93,10 +95,14 @@ onMounted(() => {
         }
     }
 
-    setInterval(() => {
-        currentIndex.value = (currentIndex.value + 1) % phrases.length
-    }, 5000)
-})
+    interval = setInterval(() => {
+        currentIndex.value = (currentIndex.value + 1) % slides.value.length;
+    }, 3000);
+});
+
+onBeforeUnmount(() => {
+    clearInterval(interval);
+});
 </script>
 
 <template>
@@ -104,16 +110,15 @@ onMounted(() => {
     <Head title="Pagina inicial" />
     <GuestHeader />
     <main class="mt-[86px]">
-        <section id="welcome" class="w-full h-72 bg-slate-800 flex justify-center items-center">
-            <div class="container text-center">
-                <transition-group name="fade" tag="div">
-                    <h1 v-for="phrase in [currentPhrase]" :key="phrase"
-                        class="text-2xl md:text-4xl font-bold text-white">
-                        {{ phrase }}
-                    </h1>
-                </transition-group>
-            </div>
+        <section id="welcome" class="w-full h-72 bg-cover bg-center flex justify-center items-center relative"
+            style="background-image: url('/images/background-slider.jpg')">
+            <transition name="fade" mode="out-in">
+                <span :key="currentIndex" class="text-3xl text-white font-bold absolute text-center">
+                    {{ slides[currentIndex] }}
+                </span>
+            </transition>
         </section>
+
         <section id="nosotros" class="p-5 bg-white shadow">
             <div class="container sm:w-11/12 xl:w-9/12 mx-auto">
                 <h1 class="text-2xl border-b pb-2">Nosotros</h1>
@@ -216,7 +221,7 @@ onMounted(() => {
     </main>
 </template>
 
-<style scoped>
+<style>
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 1s;
