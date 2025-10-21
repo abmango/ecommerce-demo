@@ -23,13 +23,9 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
-
 Route::get('/admin-test', function () {
     return 'Accediste a una ruta de administrador';
-})->middleware(\App\Http\Middleware\CheckAdmin::class);
-
-
-
+})->middleware('admin');
 
 Route::middleware([
     'auth:sanctum',
@@ -47,19 +43,12 @@ Route::middleware([
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(\App\Http\Middleware\CheckAdmin::class);
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(\App\Http\Middleware\CheckAdmin::class);
 
-    // Confirmación de compra (nuevo)
-    Route::get('/orders/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
     // Órdenes de compra
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/ ;
-    ;
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/ ;
-    ;
-    
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/;;
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/;;
     
     Route::post('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
-
-    
 
     // Facturas
     Route::get('/orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
@@ -74,8 +63,6 @@ Route::middleware([
 // No hace falta iniciar sesión para ver los productos
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-
-
 
 // Formulario de contacto
 Route::post('/contactar', [ContactController::class, 'send'])->name('contact.send');
