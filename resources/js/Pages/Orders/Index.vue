@@ -1,5 +1,16 @@
 <template>
   <GuestHeader />
+  <!-- Loader pantalla completa -->
+  <div v-if="uploading" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="text-white text-lg">
+      <svg class="animate-spin h-10 w-10 text-white mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+      </svg>
+      Subiendo factura...
+    </div>
+  </div>
   <div class="container mx-auto py-8 pt-24">
     <div class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
@@ -161,10 +172,19 @@ function uploadInvoice(orderId, event) {
   const formData = new FormData()
   formData.append('invoice', file)
 
+  uploading.value = true
+
   router.post(`/orders/${orderId}/invoice`, formData, {
     forceFormData: true,
+    onProgress: (progress) => {
+      console.log('Subiendo factura:', progress.percentage)
+    },
     onSuccess: () => {
+      uploading.value = false
       router.reload({ only: ['orders'] })
+    },
+    onError: () => {
+      uploading.value = false
     }
   })
 }

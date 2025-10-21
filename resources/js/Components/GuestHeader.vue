@@ -3,6 +3,13 @@ import { Link } from '@inertiajs/vue3'
 import { reactive, ref, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import UserMenu from '@/Components/UserMenu.vue'
+
+const isUserMenuVisible = ref(false);
+
+const toggleUserMenu = () => {
+    isUserMenuVisible.value = !isUserMenuVisible.value;
+};
 
 const page = usePage()
 
@@ -90,12 +97,6 @@ navItems.push({
 });
 
 if (isLoggedIn.value) {
-    navItems.push({
-        type: 'normal',
-        name: 'Dashboard',
-        href: route('dashboard'),
-        class: 'bg-green-600 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
-    });
 
     if (isAdmin.value) {
         // Quitar el carrito y poner Órdenes en su lugar
@@ -116,15 +117,9 @@ if (isLoggedIn.value) {
         href: route('login'),
         class: 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
     });
-    
+
 }
 
-
-
-const isMenuVisible = ref(false)
-const toggleMenu = () => {
-    isMenuVisible.value = !isMenuVisible.value
-}
 </script>
 
 <template>
@@ -134,37 +129,50 @@ const toggleMenu = () => {
             <img src="/images/logo.jpg" class="w-[85px]" />
             </Link>
             <nav class="navigation-items hidden md:block">
-                <template v-for="item in navItems" :key="item.name">
-                    <!-- Inicio button -->
-                    <a v-if="item.type === 'inicio'" href="javascript:void(0)" @click.prevent="handleInicioClick"
-                        class="mx-3 hover:underline cursor-pointer" :class="item.class ?? ''">
-                        {{ item.name }}
-                    </a>
+                <div class="flex items-center space-x-3">
 
-                    <!-- Buttons with scroll to sections -->
-                    <a v-else-if="item.type === 'anchor'" href="javascript:void(0)"
-                        @click.prevent="() => handleAnchorRedirect(item.href)"
-                        class="mx-3 hover:underline cursor-pointer" :class="item.class ?? ''">
-                        {{ item.name }}
-                    </a>
 
-                    <!-- Normal buttons and ícons -->
-                    <Link v-else :href="item.href" class="mx-3" :class="item.class ?? ''"
-                        @click="isMenuVisible = false">
-                    <template v-if="item.type === 'normal'">
-                        <span>{{ item.name }}</span>
+                    <!-- Resto de botones navItems -->
+                    <template v-for="item in navItems" :key="item.name">
+                        <a v-if="item.type === 'inicio'" href="javascript:void(0)" @click.prevent="handleInicioClick"
+                            class="hover:underline cursor-pointer" :class="item.class ?? ''">
+                            {{ item.name }}
+                        </a>
+
+                        <a v-else-if="item.type === 'anchor'" href="javascript:void(0)"
+                            @click.prevent="() => handleAnchorRedirect(item.href)"
+                            class="hover:underline cursor-pointer" :class="item.class ?? ''">
+                            {{ item.name }}
+                        </a>
+
+                        <Link v-else :href="item.href" class="" :class="item.class ?? ''"
+                            @click="isUserMenuVisible = false">
+                        <template v-if="item.type === 'normal'">
+                            <span>{{ item.name }}</span>
+                        </template>
+                        <template v-else>
+                            <i :class="item.name"></i> {{ item.text }}
+                        </template>
+                        </Link>
                     </template>
-                    <template v-else>
-                        <i :class="item.name"></i> {{ item.text }}
-                    </template>
-                    </Link>
-                </template>
+                    <!-- Dashboard con UserMenu -->
+                    <UserMenu v-if=isLoggedIn align="right">
+                        <template #trigger>
+                            <button
+                                class="bg-green-600 text-white p-2 rounded-sm hover:text-white hover:border-none w-auto">
+                                Dashboard
+                            </button>
+                        </template>
+                    </UserMenu>
+                </div>
+
+
             </nav>
-            <i class="fa-solid fa-bars fa-xl cursor-pointer md:hidden" @click="toggleMenu"></i>
+            <i class="fa-solid fa-bars fa-xl cursor-pointer md:hidden" @click="toggleUserMenu"></i>
         </div>
 
         <!-- Burger menu -->
-        <nav class="navigation-items block md:hidden border-t">
+        <nav class="navigation-items block md:hidden border-t" :class="{ 'hidden': !isUserMenuVisible }">
             <template v-for="item in navItems" :key="item.name">
                 <a v-if="item.type === 'inicio'" href="javascript:void(0)" @click.prevent="handleInicioClick"
                     class="mx-3 block py-2 mb-1" :class="item.class ?? ''">
@@ -178,7 +186,7 @@ const toggleMenu = () => {
                 </a>
 
                 <Link v-else :href="item.href" class="mx-3 block py-2 mb-1" :class="item.class ?? ''"
-                    @click="isMenuVisible = false">
+                    @click="isUserMenuVisible = false">
                 <template v-if="item.type === 'normal'">
                     <span>{{ item.name }}</span>
                 </template>
@@ -187,6 +195,14 @@ const toggleMenu = () => {
                 </template>
                 </Link>
             </template>
+                <UserMenu v-if=isLoggedIn align="left">
+                    <template #trigger>
+                        <button
+                            class="bg-green-600 text-white p-2 rounded-sm hover:text-white hover:border-none w-auto">
+                            Dashboard
+                        </button>
+                    </template>
+                </UserMenu>
         </nav>
     </header>
 </template>

@@ -43,11 +43,9 @@ class OrderController extends Controller
     {
         $user = auth()->user();
 
-        $ordersQuery = $user->role==='admin'
-            ? Order::with(['user', 'items'])
-            : Order::with(['user', 'items'])->where('user_id', $user->id);
-
-        $orders = $ordersQuery->get();
+        $orders = $user->role === 'admin'
+            ? Order::with('user')->get()
+            : Order::with('user')->where('user_id', $user->id)->get();
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
@@ -122,4 +120,12 @@ class OrderController extends Controller
 
         return back()->with('success', 'Factura subida correctamente.');
     }
+
+    public function confirmation()
+    {
+        return Inertia::render('Orders/Confirmation', [
+            'order_id' => session('order_id'),
+        ]);
+    }
+
 }
