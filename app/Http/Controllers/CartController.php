@@ -198,7 +198,6 @@ class CartController extends Controller
             return redirect()->route('login')->with('success', 'Primero debes loguearte para comprar.');
         }
 
-        return redirect()->route('orders.confirmation')->with('order_id', $order->id);
-
+        return redirect()->route('cart.index')->with('success', 'Compra procesada correctamente.');
     }
 }

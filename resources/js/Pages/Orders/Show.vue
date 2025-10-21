@@ -1,7 +1,6 @@
 <template>
-  <GuestHeader />
-  <div class="container mx-auto pt-20 px-4">
-    <div class="flex justify-end mb-6">
+  <div class="container mx-auto py-8">
+    <div class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/orders" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Volver a las órdenes
       </InertiaLink>
@@ -20,6 +19,9 @@
         </li>
       </ul>
     </div>
+
+    
+
 
     <!-- Sólo para los administradores -->
     <div v-if="$page.props.auth?.user?.role === 'admin'">
@@ -42,22 +44,21 @@
   </div>
 </template>
 
-<script setup>
-import { router } from '@inertiajs/vue3';
-import GuestHeader from '@/Components/GuestHeader.vue';
-import { defineProps } from 'vue';
+<script>
 import { Link as InertiaLink } from '@inertiajs/vue3';
 
-
-const props = defineProps({
-  order: Object
-});
-
-function confirmOrder() {
-  router.post(`/orders/${props.order.id}/confirm`);
-}
-
-function rejectOrder() {
-  router.post(`/orders/${props.order.id}/reject`);
+export default {
+  props: {
+    order: Object
+  },
+  components: { InertiaLink },
+  methods: {
+    confirmOrder() {
+      this.$inertia.post(`/orders/${this.order.id}/confirm`);
+    },
+    rejectOrder() {
+      this.$inertia.post(`/orders/${this.order.id}/reject`);
+    }
+  },
 }
 </script>
