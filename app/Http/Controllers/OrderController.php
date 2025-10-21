@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\CartItem;
@@ -18,7 +19,7 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total' => $request->total,
-                'status' => 'pendiente',
+                'status' => OrderStatusEnum::PENDIENTE['key'],
             ]);
 
             $cartItems = CartItem::where('user_id', auth()->id())->get();
@@ -48,6 +49,7 @@ class OrderController extends Controller
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
+            'ordersStatuses' => OrderStatusEnum::all(),
             'auth' => [
                 'user' => $user
             ]
@@ -55,7 +57,7 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('items.product')->findOrFail($id);
+        $order = Order::with('items')->findOrFail($id);
 
         return Inertia::render('Orders/Show', [
             'order' => $order,
@@ -66,7 +68,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = 'confirmada';
+        $order->status = OrderStatusEnum::CONFIRMADA['key'];
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Orden confirmada con éxito.');
@@ -76,7 +78,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $order->status = 'rechazada';
+        $order->status = OrderStatusEnum::RECHAZADA['key'];
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Orden rechazada con éxito.');
@@ -96,28 +98,6 @@ class OrderController extends Controller
 
         return response()->download($path);
     }
-
-    // public function uploadInvoice(Request $request, Order $order)
-    // {
-    //     $request->validate([
-    //         'invoice' => 'required|file|mimes:pdf|max:2048',
-    //     ]);
-
-    //     $invoice = $request->file('invoice');
-
-    //     // Generamos el nombre correcto según la convención
-    //     $numFactura = str_pad($order->id, 8, '0', STR_PAD_LEFT);
-    //     $filename = "20150978387_011_00005_{$numFactura}.pdf";
-
-    //     // Guardamos en 'public/invoices'
-    //     $path = $invoice->storeAs('invoices', $filename, 'public');
-
-    //     // Guardamos el path en la base de datos
-    //     $order->invoice_path = $path;
-    //     $order->save();
-
-    //     return back()->with('success', 'Factura cargada exitosamente.');
-    // }
 
     public function uploadInvoice(Request $request, Order $order)
     {
