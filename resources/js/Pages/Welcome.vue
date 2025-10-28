@@ -110,7 +110,7 @@ onBeforeUnmount(() => {
     <GuestHeader />
     <main class="mt-[86px]">
         <section id="welcome" class="w-full h-72 bg-cover bg-center flex justify-center items-center relative"
-            style="background-image: url('/images/background-slider.jpg')">
+            style="background-image: url('/images/background-slider.jpeg')">
             <transition name="fade" mode="out-in">
                 <span :key="currentIndex" class="text-3xl text-white font-bold absolute text-center">
                     {{ slides[currentIndex] }}

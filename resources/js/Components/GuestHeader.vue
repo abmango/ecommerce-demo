@@ -117,7 +117,12 @@ if (isLoggedIn.value) {
         href: route('login'),
         class: 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
     });
-
+    navItems.push({
+        type: 'normal',
+        name: 'Registrarse',
+        href: route('register'),
+        class: 'bg-indigo-500 text-white p-2 ms-1 rounded-sm hover:text-white hover:border-none w-auto'
+    });
 }
 
 </script>
