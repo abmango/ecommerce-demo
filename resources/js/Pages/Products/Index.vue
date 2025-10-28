@@ -2,7 +2,7 @@
   <GuestHeader />
   <Head title="Catalogo de productos"></Head>
   <div class="container mx-auto py-8 mt-20">
-    <div v-if="auth && auth.user.role === 'admin'" class="absolute top-0 left-0 mt-4 mr-4">
+    <div v-if="auth && auth.user.role === 'admin'" class="absolute top-20 right-20 mt-4 mr-4">
       <InertiaLink href="/products/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Agregar producto
       </InertiaLink>
