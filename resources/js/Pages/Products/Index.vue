@@ -1,14 +1,16 @@
 <template>
   <GuestHeader />
   <Head title="Catalogo de productos"></Head>
-  <div class="container mx-auto py-8 mt-20">
-    <div v-if="auth && auth.user.role === 'admin'" class="absolute top-20 right-20 mt-4 mr-4">
-      <InertiaLink href="/products/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Agregar producto
-      </InertiaLink>
-    </div>
+  <div class="container mx-auto p-5 mt-20">
 
-    <h1 class="text-2xl border-b pb-2 font-semibold mb-6">Lista de Productos</h1>
+    <div class="catalogo-header flex justify-between items-center border-b border-b-slate-300 mb-3">
+      <h1 class="text-2xl font-semibold">Lista de Productos</h1>
+      <div v-if="auth && auth.user.role === 'admin'">
+        <InertiaLink href="/products/create" class="bg-lime-700 hover:bg-lime-900 text-white py-2 px-4 rounded block mb-2">
+          Agregar nuevo
+        </InertiaLink>
+      </div>
+    </div>
 
     <!-- Vista para Administradores -->
     <div v-if="auth && auth.user.role === 'admin'">
