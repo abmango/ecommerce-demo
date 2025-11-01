@@ -26,15 +26,15 @@
       <template #content>
         <!-- Account Management -->
         <div class="block px-4 py-2 text-xs text-gray-400">
-          Manage Account
+          Administrar cuenta
         </div>
 
         <DropdownLink :href="route('dashboard')">
-          Go to Dashboard
+          Ir al Dashboard
         </DropdownLink>
 
         <DropdownLink :href="route('profile.show')">
-          Profile
+          Editar perfil
         </DropdownLink>
 
         <div class="border-t border-gray-200"/>
@@ -42,7 +42,7 @@
         <!-- Authentication -->
         <form @submit.prevent="logout">
           <DropdownLink as="button">
-            Log Out
+            Cerrar sesión
           </DropdownLink>
         </form>
       </template>
