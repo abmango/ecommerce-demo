@@ -118,10 +118,10 @@
         <div class="flex justify-between w-full">
           <div>
             <template v-if="(orderRecieved.status == 'pendiente')">
-              <PrimaryButton class="mr-2">
+              <PrimaryButton @click="confirmOrder(orderRecieved.id)" class="mr-2">
                 Aprobar
               </PrimaryButton>
-              <DangerButton class="mr-2">
+              <DangerButton @click="rejectOrder(orderRecieved.id)" class="mr-2">
                 Rechazar
               </DangerButton>
             </template>
@@ -165,6 +165,17 @@ const productItemsCaption = (items) => {
   const total = items.length
   return total + ' ' + (total == 1 ? 'item' : 'items');
 };
+
+function confirmOrder(orderId) {
+  router.post(`/orders/${orderId}/confirm`)
+  closeModal()
+}
+
+function rejectOrder(orderId) {
+  router.post(`/orders/${orderId}/reject`)
+  closeModal()
+}
+
 
 function uploadInvoice(orderId, event) {
   const file = event.target.files[0]
