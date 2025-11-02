@@ -27,7 +27,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
         </template>
 
         <div class="mb-4 text-sm text-gray-600">
-            Before continuing, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.
+            Antes de continuar, ¿podrías verificar tu dirección de correo electrónico haciendo clic en el enlace que acabamos de enviarte por correo electrónico? Si no recibiste el correo electrónico, con gusto te enviaremos otro.
         </div>
 
         <div v-if="verificationLinkSent" class="mb-4 font-medium text-sm text-green-600">
@@ -37,7 +37,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Resend Verification Email
+                    Reenviar correo
                 </PrimaryButton>
 
                 <div>
@@ -45,7 +45,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                         :href="route('profile.show')"
                         class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        Edit Profile</Link>
+                        Editar perfil</Link>
 
                     <Link
                         :href="route('logout')"
@@ -53,7 +53,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                         as="button"
                         class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-2"
                     >
-                        Log Out
+                        Cerrar sesión
                     </Link>
                 </div>
             </div>
