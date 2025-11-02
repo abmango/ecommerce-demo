@@ -6,7 +6,7 @@
 
     <div class="catalogo-header flex justify-between items-center border-b border-b-slate-300 mb-3">
       <h1 class="text-2xl font-semibold">Lista de Productos</h1>
-      <div v-if="auth && auth.user.role === 'admin'">
+      <div v-if="isAdmin">
         <InertiaLink href="/products/create"
           class="bg-lime-700 hover:bg-lime-900 text-white py-2 px-4 rounded block mb-2">
           Agregar nuevo
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Vista para Administradores -->
-    <div v-if="auth && auth.user.role === 'admin'">
+    <div v-if="isAdmin">
 
       <table class="min-w-full border border-gray-300">
         <thead>
@@ -88,13 +88,19 @@
 <script setup>
 import GuestHeader from '@/Components/GuestHeader.vue';
 import { Head, Link as InertiaLink } from '@inertiajs/vue3';
-import { router } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps({
   products: Array,
-  auth: Object,
-  isAdmin: Boolean,
+  auth: {
+    type: Object,
+    default: () => ({ user: null })
+  },
 })
+
+const isLogged = computed(() => props.auth.user != null)
+const isAdmin = computed(() => isLogged && props.auth?.user?.role === 'admin')
 
 const addToCart = (productId) => {
   router.post(`/cart/add/${productId}`)

@@ -18,12 +18,12 @@
 
     <!-- Botón para agregar al carrito -->
 
-    <button v-if="!auth || (auth && auth.user.role === 'user')" @click="addToCart"
+    <button v-if="!isAdmin" @click="addToCart"
       class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
       Agregar al carrito
     </button>
 
-    <div v-if="auth && auth.user.role === 'admin'" class="flex space-x-4 mt-4">
+    <div v-if="isAdmin" class="flex space-x-4 mt-4">
       <button @click="deleteProduct"
         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         Dar de baja
@@ -46,6 +46,14 @@ export default {
   props: {
     product: Object,
     auth: Object,
+  },
+  computed: {
+    isLogged() {
+      return this.auth.user != null
+    },
+    isAdmin() {
+      return this.isLogged && this.auth.user.role === 'admin'
+    },
   },
   components: {
     Link,
