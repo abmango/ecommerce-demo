@@ -1,8 +1,9 @@
 <template>
+
   <Head title="Detalle de producto"></Head>
   <GuestHeader></GuestHeader>
   <div class="container mx-auto py-8 mt-20">
-    <div class="absolute top-0 right-0 mt-4 mr-4">
+    <div class="flex justify-between items-center mb-6">
       <Link href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
       Volver
       </Link>
@@ -16,11 +17,11 @@
     <p class="text-gray-500">Tipo: {{ product.type }}</p>
 
     <!-- Botón para agregar al carrito -->
-    
-      <button  v-if="!auth || (auth && auth.user.role === 'user')" @click="addToCart"
-        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Agregar al carrito
-      </button>
+
+    <button v-if="!auth || (auth && auth.user.role === 'user')" @click="addToCart"
+      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      Agregar al carrito
+    </button>
 
     <div v-if="auth && auth.user.role === 'admin'" class="flex space-x-4 mt-4">
       <button @click="deleteProduct"
