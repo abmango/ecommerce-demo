@@ -40,8 +40,13 @@
                 </a>
               </template>
               <template v-else-if="order.status === 'confirmada'">
-                <input type="file" accept="application/pdf" @change="uploadInvoice(order.id, $event)"
-                  class="block w-full text-sm text-gray-600" />
+                <template v-if="auth?.user?.role === 'admin'">
+                  <input type="file" accept="application/pdf" @change="uploadInvoice(order.id, $event)"
+                    class="block w-full text-sm text-gray-600" />
+                </template>
+                <template v-else>
+                  No hay factura
+                </template>
               </template>
               <template v-else>
                 -
@@ -150,7 +155,8 @@ import { defineProps, ref } from 'vue'
 
 const props = defineProps({
   orders: Array,
-  ordersStatuses: Object 
+  ordersStatuses: Object,
+  auth: Object,
 })
 
 const orderRecieved = ref()
