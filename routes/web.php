@@ -8,13 +8,17 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
 use App\Http\Middleware\CheckAdmin;
+use App\Models\Product;
 
 Route::get('/', function () {
+    $products = Product::take(6)->get();
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'products' => $products,
     ]);
 })->name('welcome');
 

@@ -6,6 +6,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import { computed } from 'vue'
 
 const form = useForm({
     nombre: '',
@@ -24,8 +25,6 @@ const slides = ref([
 const currentIndex = ref(0);
 let interval = null;
 
-//const currentPhrase = computed(() => phrases[currentIndex.value])
-
 const submit = () => {
     form.post(route('contact.send'), {
         preserveScroll: true,
@@ -35,7 +34,7 @@ const submit = () => {
     })
 }
 
-defineProps({
+const props = defineProps({
     canLogin: {
         type: Boolean,
     },
@@ -50,7 +49,25 @@ defineProps({
         type: String,
         required: true,
     },
+    products: {
+        type: Array,
+    },
 });
+
+const showModal = ref(false)
+const selectedProduct = ref({})
+
+const openModal = (product) => {
+    selectedProduct.value = product
+    showModal.value = true
+}
+
+const firstSixProducts = computed(() => (props.products || []).slice(0, 6))
+
+const closeModal = () => {
+    showModal.value = false
+    selectedProduct.value = {}
+}
 
 function smoothScrollTo(targetEl, duration = 800) {
     const target = document.querySelector(targetEl);
@@ -159,26 +176,53 @@ onBeforeUnmount(() => {
                 <h1 class="text-2xl border-b pb-2">Especialidades</h1>
                 <aside class="block italic text-sm my-2">
                     Nuestra especialidad son los delicados dulces mochigashi inspirados en la naturaleza, confeccionados
-                    a base de arroz
-                    glutinoso con dulce shiroan, simbolizando las flores peonía, camelia, ume y el bambú.
+                    a base de arroz glutinoso con dulce shiroan, simbolizando las flores peonía, camelia, ume y el
+                    bambú.
                 </aside>
+
                 <div class="grid grid-cols-12 gap-4 mt-3 p-0 m-0">
-                    <div v-for="n in 6" class="col-span-12 sm:col-span-6 lg:col-span-4">
-                        <div class="bg-white  w-full min-h-60 shadow bg-cover bg-center relative hover:cursor-pointer hover:text-xl hover:ease-in hover:duration-150"
-                            :style="'background-image: url(/images/home-prod-' + n + '.png)'">
+                    <div v-for="product in products" :key="product.id" class="col-span-12 sm:col-span-6 lg:col-span-4">
+                        <div class="bg-white w-full min-h-60 shadow relative hover:cursor-pointer" :style="`
+                            background-image: url(${product.image || '/images/logo.jpg'});
+                            background-size: cover;
+                            background-position: center;
+                            background-repeat: no-repeat;
+                        `" @click="openModal(product)">
                             <div
                                 class="absolute bg-black opacity-50 w-full h-full flex text-center justify-center items-center top-0 start-0">
                             </div>
                             <div
                                 class="w-full h-full flex text-slate-200 absolute z-20 justify-center items-center text-center">
-                                <div>Producto {{ n }}</div>
+                                <div>{{ product.name }}</div>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-span-12 justify-center items-center text-center my-3">
                         <Link :href="route('products.index')"
-                            class="border duration-100 border-indigo-500 text-indigo-500 rounded p-2 bg-white">Ver mas
-                        productos</Link>
+                            class="border duration-100 border-indigo-500 text-indigo-500 rounded p-2 bg-white">
+                        Ver más productos
+                        </Link>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div v-if="showModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div class="bg-white p-6 rounded shadow-lg w-80">
+                        <h3 class="text-xl font-bold mb-2">{{ selectedProduct.name }}</h3>
+                        <p class="mb-4">Categoría: {{ selectedProduct.type }}</p>
+                        <img :src="selectedProduct.image || '/images/logo.jpg'" alt="Imagen del producto"
+                            class="w-64 h-64 object-cover mb-4">
+                        <div class="flex justify-between">
+                            <Link :href="`/products/${selectedProduct.id}`"
+                                class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                            Ver más detalles
+                            </Link>
+                            <button @click="closeModal" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">
+                                Cerrar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

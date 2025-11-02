@@ -56,16 +56,15 @@
           :class="{'bg-white p-4 rounded-lg shadow': true, 'opacity-50': product.deleted_at || product.stock == 0}">
           <InertiaLink :href="`/products/${product.id}`" class="block"
             :class="{'pointer-events-none': product.deleted_at}">
-            <!-- img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto" class="w-full h-48 object-cover mb-4" / -->
-            <div class="w-full bg-contain bg-no-repeat bg-center h-28"
-              style="background-image: url('/images/logo.jpg');"></div>
+            <img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto" class="w-full h-48 object-cover mb-4" />
           </InertiaLink>
           <h2 class="first-letter:uppercase font-semibold text-lg">{{ product.name }}</h2>
           <p class="text-gray-500">$ {{ product.price }}</p>
           <!-- p v-if="product.deleted_at" class="text-red-500 font-semibold">Dado de baja</p -->
           <div class="flex justify-end items-center mt-3">
             <template v-if="product.stock > 0">
-              <button @click="addToCart(product.id)" class="border border-indigo-500 text-indigo-500 p-2 mx-1 rounded-md">
+              <button @click="addToCart(product.id)"
+                class="border border-indigo-500 text-indigo-500 p-2 mx-1 rounded-md">
                 <i class="me-1 fas fa-cart-shopping"></i>
                 <span>Agregar</span>
               </button>

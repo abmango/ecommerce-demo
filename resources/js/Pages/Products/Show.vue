@@ -10,7 +10,7 @@
     </div>
 
     <h1 class="text-2xl font-bold mb-6">{{ product.name }}</h1>
-    <img :src="product.image" alt="Imagen del producto" class="w-64 h-64 object-cover mb-4">
+    <img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto" class="w-64 h-64 object-cover mb-4">
     <p class="text-gray-500">{{ product.description }}</p>
     <p class="text-lg font-bold">Precio: $ {{ product.price }}</p>
     <p class="text-gray-500">Stock: {{ product.stock }}</p>
