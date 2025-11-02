@@ -14,7 +14,7 @@ const form = useForm({
     email: '',
     cuit: '',
     phone: '',
-    preferred_contact: '',
+    preferred_contact_method: '',
     password: '',
     password_confirmation: '',
     terms: false,
@@ -66,10 +66,10 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <label for="preferred_contact" class="block text-sm font-medium text-gray-700">
+                <label for="preferred_contact_method" class="block text-sm font-medium text-gray-700">
                     Medio de contacto preferido
                 </label>
-                <select id="preferred_contact" v-model="form.preferred_contact"
+                <select id="preferred_contact_method" v-model="form.preferred_contact_method"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     required>
                     <option disabled value="">Seleccione un medio</option>
