@@ -5,7 +5,7 @@
   <div class="container mx-auto py-8 mt-20">
     <div class="flex justify-between items-center mb-6">
       <Link href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-      Volver
+        Volver
       </Link>
     </div>
 
