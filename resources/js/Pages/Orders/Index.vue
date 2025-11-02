@@ -53,7 +53,7 @@
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Ver Detalles
               </InertiaLink -->
-              <a href="#"  @click.prevent="openModal(order)">Ver</a>
+              <a href="#" @click.prevent="openModal(order)">Ver</a>
             </td>
           </tr>
         </tbody>
@@ -64,63 +64,75 @@
     </div>
 
     <DialogModal :show="modalVisible" @close="closeModal" :closeable="true">
-        <template #title>
-            Detalle del orden
-        </template>
+      <template #title>
+        Detalle del orden
+      </template>
 
-        <template #content>
-          <h2 class="font-medium mb-2">Datos de contacto del cliente</h2>
-          <table class="min-w-full bg-white border border-gray-300 table-auto">
-            <tr class="border-b">
-              <th class="py-2 px-4 border border-gray-300  bg-gray-200 w-40">Nombre completo</th>
-              <td class="ps-2">{{ orderRecieved.user.name }}</td>
-            </tr>
+      <template #content>
+        <h2 class="font-medium mb-2">Datos de contacto del cliente</h2>
+        <table class="min-w-full bg-white border border-gray-300 table-auto">
+          <tr class="border-b">
+            <th class="py-2 px-4 border border-gray-300  bg-gray-200 w-40">Nombre completo</th>
+            <td class="ps-2">{{ orderRecieved.user.name }}</td>
+          </tr>
+          <tr>
+            <th class="py-2 px-4 border border-gray-300  bg-gray-200 w-40">Email de contacto</th>
+            <td class="ps-2">{{ orderRecieved.user.email }}</td>
+          </tr>
+          <tr>
+            <th class="py-2 px-4 border border-gray-300  bg-gray-200 w-40">CUIT</th>
+            <td class="ps-2">{{ orderRecieved.user.cuit }}</td>
+          </tr>
+          <tr>
+            <th class="py-2 px-4 border border-gray-300  bg-gray-200 w-40">Teléfono</th>
+            <td class="ps-2">{{ orderRecieved.user.phone }}</td>
+          </tr>
+          <tr>
+            <th class="py-2 px-4 border border-gray-300  bg-gray-200 w-40">Vía de preferencia</th>
+            <td class="ps-2">{{ orderRecieved.user.preferred_contact_method }}</td>
+          </tr>
+        </table>
+        <hr class="mt-5 mb-3">
+        <h2 class="font-medium mb-1">Productos</h2>
+        <table class="min-w-full bg-white border border-gray-300 table-auto">
+          <thead>
             <tr>
-              <th class="py-2 px-4 border border-gray-300  bg-gray-200 w-40">Email de contacto</th>
-              <td class="ps-2">{{ orderRecieved.user.email }}</td>
+              <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">#</td>
+              <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">Nombre</td>
+              <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">Cantidad</td>
+              <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">Precio x unidad</td>
             </tr>
-          </table>
-          <hr class="mt-5 mb-3">
-          <h2 class="font-medium mb-1">Productos</h2>
-          <table class="min-w-full bg-white border border-gray-300 table-auto">
-            <thead>
-              <tr>
-                <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">#</td>
-                <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">Nombre</td>
-                <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">Cantidad</td>
-                <td class="py-2 px-1 border border-gray-300 text-center bg-gray-200">Precio x unidad</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item of orderRecieved.items">
-                <td class="py-2 px-1 border text-center">{{ item.id }}</td>
-                <td class="py-2 px-1 border text-center">{{ item.product.name }}</td>
-                <td class="py-2 px-1 border text-center">{{ item.quantity }}</td>
-                <td class="py-2 px-1 border text-center">$ {{ item.product.price }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </template>
+          </thead>
+          <tbody>
+            <tr v-for="item of orderRecieved.items">
+              <td class="py-2 px-1 border text-center">{{ item.id }}</td>
+              <td class="py-2 px-1 border text-center">{{ item.product.name }}</td>
+              <td class="py-2 px-1 border text-center">{{ item.quantity }}</td>
+              <td class="py-2 px-1 border text-center">$ {{ item.product.price }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </template>
 
-        <template #footer>
-          <div class="flex justify-between w-full">
-            <div>
-              <template v-if="(orderRecieved.status == 'pendiente')">
-                <PrimaryButton class="mr-2">
-                  Aprobar
-                </PrimaryButton>
-                <DangerButton class="mr-2">
-                  Rechazar
-                </DangerButton>
-              </template>
-            </div>
-            <div>
-              <SecondaryButton @click="closeModal">
-                  Cancelar
-              </SecondaryButton>              
-            </div>
+      <template #footer>
+        <div class="flex justify-between w-full">
+          <div>
+            <template v-if="(orderRecieved.status == 'pendiente')">
+              <PrimaryButton class="mr-2">
+                Aprobar
+              </PrimaryButton>
+              <DangerButton class="mr-2">
+                Rechazar
+              </DangerButton>
+            </template>
           </div>
-        </template>
+          <div>
+            <SecondaryButton @click="closeModal">
+              Cancelar
+            </SecondaryButton>
+          </div>
+        </div>
+      </template>
     </DialogModal>
 
   </div>
