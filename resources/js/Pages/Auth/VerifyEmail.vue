@@ -19,7 +19,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 </script>
 
 <template>
-    <Head title="Email Verification" />
+    <Head title="Verificación de correo" />
 
     <AuthenticationCard>
         <template #logo>
@@ -31,7 +31,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
         </div>
 
         <div v-if="verificationLinkSent" class="mb-4 font-medium text-sm text-green-600">
-            A new verification link has been sent to the email address you provided in your profile settings.
+            Un nuevo enlace de verificación ha sido enviado a la dirección de correo electrónico que proporcionaste en la configuración de tu perfil.
         </div>
 
         <form @submit.prevent="submit">
