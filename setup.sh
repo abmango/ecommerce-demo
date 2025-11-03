@@ -1,4 +1,4 @@
-php_82 = "/opt/cloudlinux/alt-php82/root/usr/bin/php"
+php_82="/opt/cloudlinux/alt-php82/root/usr/bin/php"
 git pull origin master
 $php_82 ../composer.phar install
 $php_82 ../composer.phar dump-autoload --optimize
