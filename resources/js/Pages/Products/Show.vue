@@ -46,14 +46,14 @@
         <!-- Botones -->
         <div v-if="!isAdmin" class="flex flex-col sm:flex-row gap-4 mt-6">
           <button
-            @click="addToCart"
+            @click="addToCart()"
             class="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
           >
             <i class="fa-solid fa-cart-plus"></i> Agregar al carrito
           </button>
 
           <button
-            @click="processPurchase(product.id)"
+            @click="processPurchase()"
             class="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
           >
             <i class="fa-solid fa-bag-shopping"></i> Comprar ahora
@@ -116,7 +116,7 @@ export default {
     },
     addToCart() {
       return new Promise((resolve, reject) => {
-        this.$inertia.post(`/cart/add/${productId}`, {}, {
+        this.$inertia.post(`/cart/add/${this.product.id}`, {}, {
           onSuccess: resolve,
           onError: reject
         });
