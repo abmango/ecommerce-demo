@@ -8,7 +8,10 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
 use App\Http\Middleware\CheckAdmin;
+use App\Http\Middleware\IsEmailVerified;
 use App\Models\Product;
+use Laravel\Fortify\Http\Controllers\ConfirmablePasswordController;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 Route::get('/', function () {
     $products = Product::take(6)->get();
@@ -36,7 +39,7 @@ Route::get('/admin-test', function () {
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified',
+    IsEmailVerified::class,
 ])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -64,6 +67,13 @@ Route::middleware([
     // Checkout (compra)
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
+
+    /**
+     * Piso las rutas de fortify para el nuevo middleware
+     */
+
+    Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile.show');
+    Route::get('/user/confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
 });
 
 // No hace falta iniciar sesión para ver los productos
