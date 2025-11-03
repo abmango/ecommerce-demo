@@ -29,7 +29,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'cuit' => $input['cuit'],
@@ -37,5 +37,9 @@ class CreateNewUser implements CreatesNewUsers
             'preferred_contact_method' => $input['preferred_contact_method'],
             'password' => Hash::make($input['password']),
         ]);
+
+        $user->sendEmailVerificationNotification();
+
+        return $user;
     }
 }
