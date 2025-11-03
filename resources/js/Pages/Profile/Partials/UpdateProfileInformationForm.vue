@@ -131,7 +131,7 @@ const clearPhotoFileInput = () => {
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" required
+                <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" readonly
                     autocomplete="username" />
                 <InputError :message="form.errors.email" class="mt-2" />
 
