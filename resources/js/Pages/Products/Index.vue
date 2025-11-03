@@ -56,7 +56,8 @@
           :class="{'bg-white p-4 rounded-lg shadow': true, 'opacity-50': product.deleted_at || product.stock == 0}">
           <InertiaLink :href="`/products/${product.id}`" class="block"
             :class="{'pointer-events-none': product.deleted_at}">
-            <img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto" class="w-full h-48 object-cover mb-4" />
+            <img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto"
+              class="w-full h-48 object-cover mb-4" />
           </InertiaLink>
           <h2 class="first-letter:uppercase font-semibold text-lg">{{ product.name }}</h2>
           <p class="text-gray-500">$ {{ product.price }}</p>
@@ -68,11 +69,10 @@
                 <i class="me-1 fas fa-cart-shopping"></i>
                 <span>Agregar</span>
               </button>
-              <InertiaLink :href="`/products/${product.id}`"
-                class="bg-indigo-500 hover:bg-indigo-700 text-white p-2 rounded-md">
+              <button @click="processPurchase(product.id)" class="bg-indigo-500 hover:bg-indigo-700 text-white p-2 rounded-md">
                 <span>Ordenar</span>
                 <i class="fa-solid fa-circle-chevron-right ms-1"></i>
-              </InertiaLink>
+              </button>
             </template>
             <template v-else>
               <p v-if="product.stock == 0" class="text-red-500 font-semibold">Fuera de stock</p>
@@ -101,8 +101,39 @@ const props = defineProps({
 const isLogged = computed(() => props.auth.user != null)
 const isAdmin = computed(() => isLogged && props.auth?.user?.role === 'admin')
 
-const addToCart = (productId) => {
-  router.post(`/cart/add/${productId}`)
+function addToCart(productId) {
+  return new Promise((resolve, reject) => {
+    router.post(`/cart/add/${productId}`, {}, {
+      onSuccess: resolve,
+      onError: reject
+    });
+  });
+}
+
+async function processPurchase(productId) {
+  try {
+    await addToCart(productId);
+    console.log('Producto agregado al carrito, procediendo a la compra.');
+    if (!isLogged.value) {
+      alert('Debes iniciar sesión para realizar la compra.');
+      router.visit('/login');
+      return;
+    }
+
+    await router.post('/cart/checkout', {}, {
+      onSuccess: () => {
+        alert('¡Orden de compra realizada! La misma ha sido enviada a los vendedores.');
+        router.visit('/orders');
+      },
+      onError: (errors) => {
+        console.error(errors);
+        alert('Error al procesar la orden.');
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    alert('Ocurrió un error al agregar el producto al carrito.');
+  }
 }
 
 </script>

@@ -5,7 +5,7 @@
   <div class="container mx-auto py-8 mt-20">
     <div class="flex justify-between items-center mb-6">
       <Link href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Volver
+      Volver
       </Link>
     </div>
 
@@ -19,8 +19,9 @@
     <!-- Botón para agregar al carrito -->
 
     <button v-if="!isAdmin" @click="addToCart"
-      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-      Agregar al carrito
+      class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      <i class="me-1 fas fa-cart-shopping"></i>
+      <span>Agregar</span>
     </button>
 
     <div v-if="isAdmin" class="flex space-x-4 mt-4">

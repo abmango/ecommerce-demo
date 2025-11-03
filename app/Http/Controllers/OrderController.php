@@ -32,7 +32,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('orders.show', $order->id)->with('success', 'Compra procesada con éxito.');
+            return redirect()->route('orders.index')->with('success', 'Compra procesada con éxito.');
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('cart.index')->with('error', 'Error al procesar la compra.');
@@ -55,20 +55,6 @@ class OrderController extends Controller
             'auth' => [
                 'user' => $user
             ]
-        ]);
-    }
-
-    // Unused.
-    public function show($id)
-    {
-        $order = Order::with('items')->findOrFail($id);
-
-        if($order->user_id !== auth()->user()->id && auth()->user()->role !== 'admin') {
-            abort(403, "No tienes permiso para ver esta orden.");
-        }
-
-        return Inertia::render('Orders/Show', [
-            'order' => $order,
         ]);
     }
 
