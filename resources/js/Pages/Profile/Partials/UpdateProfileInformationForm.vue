@@ -157,15 +157,15 @@ const clearPhotoFileInput = () => {
                 <InputLabel for="cuit" value="CUIT" />
                 <TextInput id="cuit" v-model="form.cuit" type="text" class="mt-1 block w-full" required
                     autocomplete="cuit" />
-                <InputError :message="'Tiene que ingresar un CUIT'" class="mt-2" />
+                <InputError v-if="!form.cuit" :message="'Tiene que ingresar un CUIT'" class="mt-2" />
             </div>
 
             <!-- Phone -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="phone" value="phone" />
+                <InputLabel for="phone" value="Teléfono" />
                 <TextInput id="phone" v-model="form.phone" type="text" class="mt-1 block w-full" required
                     autocomplete="phone" />
-                <InputError :message="'Ingrese teléfono de contacto'" class="mt-2" />
+                <InputError v-if="!form.phone" :message="'Ingrese teléfono de contacto'" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4"> <label for="preferred_contact_method"
@@ -178,7 +178,7 @@ const clearPhotoFileInput = () => {
                     <option value="telefono">Teléfono</option>
                     <option value="whatsapp">WhatsApp</option>
                 </select>
-                <InputError class="mt-2" :message="'Por favor, seleccione una opción.'" />
+                <InputError v-if="!form.preferred_contact_method" class="mt-2" :message="'Por favor, seleccione una opción.'" />
             </div>
         </template>
 

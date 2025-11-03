@@ -7,6 +7,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import DialogModal from '@/Components/DialogModal.vue';
 
 const form = useForm({
     nombre: '',
@@ -62,11 +63,8 @@ const openModal = (product) => {
     showModal.value = true
 }
 
-const firstSixProducts = computed(() => (props.products || []).slice(0, 6))
-
 const closeModal = () => {
     showModal.value = false
-    selectedProduct.value = {}
 }
 
 function smoothScrollTo(targetEl, duration = 800) {
@@ -207,24 +205,31 @@ onBeforeUnmount(() => {
                 </div>
 
                 <!-- Modal -->
-                <div v-if="showModal"
-                    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div class="bg-white p-6 rounded shadow-lg w-80">
-                        <h3 class="text-xl font-bold mb-2">{{ selectedProduct.name }}</h3>
-                        <p class="mb-4">Categoría: {{ selectedProduct.type }}</p>
-                        <img :src="selectedProduct.image || '/images/logo.jpg'" alt="Imagen del producto"
-                            class="w-64 h-64 object-cover mb-4">
-                        <div class="flex justify-between">
-                            <Link :href="`/products/${selectedProduct.id}`"
-                                class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                            Ver más detalles
-                            </Link>
-                            <button @click="closeModal" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">
-                                Cerrar
-                            </button>
+                <DialogModal :show="showModal" @close="closeModal">
+                    <template #title>
+                        {{ selectedProduct?.name }}
+                    </template>
+
+                    <template #content>
+                        <div class="flex flex-col items-center">
+                            <img :src="selectedProduct?.image ?? '/images/logo.jpg'" alt="Imagen del producto"
+                                class="w-64 h-64 object-contain rounded mb-4" />
+                            <p class="text-gray-700">Categoría: {{ selectedProduct?.type ?? 'Sin categoría' }}
+                            </p>
                         </div>
-                    </div>
-                </div>
+                    </template>
+
+                    <template #footer>
+                        <Link v-if="selectedProduct" :href="`/products/${selectedProduct.id}`"
+                            class="bg-indigo-500 hover:bg-indigo-700 text-white px-4 py-2 rounded mr-2">
+                        Ver más detalles
+                        </Link>
+                        <button @click="closeModal"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
+                            Cerrar
+                        </button>
+                    </template>
+                </DialogModal>
             </div>
         </section>
 

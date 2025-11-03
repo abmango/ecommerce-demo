@@ -1,12 +1,16 @@
 <template>
   <GuestHeader />
+
+  <Head title="Órdenes"></Head>
   <div class="container mx-auto py-8 pt-24">
-    <div class="absolute top-0 right-0 mt-4 mr-4">
-      <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Volver a productos
+    <div class="flex justify-between border-b border-b-slate-300 mb-3 top-0 right-0 mt-4 mr-4">
+      <h1 class="text-2xl font-bold mb-6">Todas las Órdenes</h1>
+
+      <InertiaLink href="/products"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded block mb-4">
+        Ir al catálogo
       </InertiaLink>
     </div>
-    <h1 class="text-2xl font-bold mb-6">Todas las Órdenes</h1>
 
     <div v-if="orders.length > 0" class="overflow-x-auto">
       <table class="min-w-full bg-white border border-gray-300 table-auto">
@@ -54,10 +58,6 @@
             </td>
 
             <td class="py-2 px-4 border border-gray-300">
-              <!-- InertiaLink :href="`/orders/${order.id}`"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Ver Detalles
-              </InertiaLink -->
               <a href="#" @click.prevent="openModal(order)">Ver</a>
             </td>
           </tr>
@@ -150,7 +150,7 @@ import GuestHeader from '@/Components/GuestHeader.vue'
 import OrderStatusBadge from '@/Components/OrderStatusBadge.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
-import { Link as InertiaLink, router } from '@inertiajs/vue3'
+import { Head, Link as InertiaLink, router } from '@inertiajs/vue3'
 import { defineProps, ref } from 'vue'
 
 const props = defineProps({

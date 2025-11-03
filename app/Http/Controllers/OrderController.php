@@ -57,9 +57,15 @@ class OrderController extends Controller
             ]
         ]);
     }
+
+    // Unused.
     public function show($id)
     {
         $order = Order::with('items')->findOrFail($id);
+
+        if($order->user_id !== auth()->user()->id && auth()->user()->role !== 'admin') {
+            abort(403, "No tienes permiso para ver esta orden.");
+        }
 
         return Inertia::render('Orders/Show', [
             'order' => $order,

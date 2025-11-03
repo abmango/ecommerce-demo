@@ -1,5 +1,7 @@
 <template>
-  <div class="container mx-auto py-8">
+  <GuestHeader />
+  <Head title="Detalles de la Orden"></Head>
+  <div class="container mx-auto py-8 pt-24">
     <div class="absolute top-0 right-0 mt-4 mr-4">
       <InertiaLink href="/orders" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Volver a las órdenes
@@ -44,21 +46,19 @@
   </div>
 </template>
 
-<script>
-import { Link as InertiaLink } from '@inertiajs/vue3';
+<script setup>
+import { Head, Link as InertiaLink } from '@inertiajs/vue3';
+import GuestHeader from '@/Components/GuestHeader.vue';
 
-export default {
-  props: {
-    order: Object
-  },
-  components: { InertiaLink },
-  methods: {
-    confirmOrder() {
-      this.$inertia.post(`/orders/${this.order.id}/confirm`);
-    },
-    rejectOrder() {
-      this.$inertia.post(`/orders/${this.order.id}/reject`);
-    }
-  },
-}
+defineProps({
+  order: Object
+});
+
+const confirmOrder = () => {
+  router.post(`/orders/${order.id}/confirm`);
+};
+
+const rejectOrder = () => {
+  router.post(`/orders/${order.id}/reject`);
+};
 </script>

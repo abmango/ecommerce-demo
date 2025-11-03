@@ -1,5 +1,7 @@
 <template>
   <GuestHeader />
+
+  <Head title="Carrito"></Head>
   <div class="container mx-auto pt-24">
     <h1 class="text-2xl font-bold mb-6 text-center">Carrito de Compras</h1>
 
@@ -58,7 +60,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { router, Link as InertiaLink } from '@inertiajs/vue3';
+import { Head, router, Link as InertiaLink } from '@inertiajs/vue3';
 import GuestHeader from '../../Components/GuestHeader.vue';
 import axios from 'axios';
 
