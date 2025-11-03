@@ -38,40 +38,39 @@ const submit = () => {
         </template>
 
         <form @submit.prevent="submit">
+            <h1 class="block pb-1 border-b text-2xl mb-3">Registrate</h1>
             <div>
                 <InputLabel for="name" value="Nombre o Razón Social" />
                 <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
-                    autocomplete="name" />
+                    autocomplete="name" placeholder="Juan Perez / Distribuidora X S.A" />
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="email" value="Email" />
                 <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full" required
-                    autocomplete="username" />
+                    autocomplete="username" placeholder="tu@correo.com" />
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="cuit" value="CUIT" />
                 <TextInput id="cuit" v-model="form.cuit" type="cuit" class="mt-1 block w-full" required
-                    autocomplete="cuit" />
+                    autocomplete="cuit" placeholder="XXXXXXXXX (sin espacios ni guiones)" />
                 <InputError v-if="!form.cuit" class="mt-2" :message="'Por favor, ingrese CUIT'" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="phone" value="Teléfono de contacto" />
                 <TextInput id="phone" v-model="form.phone" type="phone" class="mt-1 block w-full" required
-                    autocomplete="phone" />
+                    autocomplete="phone" placeholder="XXXXXXXXXX" />
                 <InputError v-if="!form.phone" class="mt-2" :message="'Tiene que ingresar al menos un número de teléfono.'" />
             </div>
 
             <div class="mt-4">
-                <label for="preferred_contact_method" class="block text-sm font-medium text-gray-700">
-                    Medio de contacto preferido
-                </label>
+                <InputLabel for="preferred_contact_method" value="Medio de contacto preferido"></InputLabel>
                 <select id="preferred_contact_method" v-model="form.preferred_contact_method"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     required>
                     <option disabled value="">Seleccione un medio</option>
                     <option value="email">Correo electrónico</option>
@@ -83,16 +82,16 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" value="Clave" />
                 <TextInput id="password" v-model="form.password" type="password" class="mt-1 block w-full" required
-                    autocomplete="new-password" />
+                    autocomplete="new-password" placeholder="****" />
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
+                <InputLabel for="password_confirmation" value="Confirmá tu clave" />
                 <TextInput id="password_confirmation" v-model="form.password_confirmation" type="password"
-                    class="mt-1 block w-full" required autocomplete="new-password" />
+                    class="mt-1 block w-full" required autocomplete="new-password" placeholder="****" />
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
@@ -116,11 +115,11 @@ const submit = () => {
             <div class="flex items-center justify-end mt-4">
                 <Link :href="route('login')"
                     class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Already registered?
+                Ya estas registrado?
                 </Link>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
+                    Crear cuenta
                 </PrimaryButton>
             </div>
         </form>
