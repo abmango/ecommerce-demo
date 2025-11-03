@@ -43,7 +43,7 @@ class OrderController extends Controller
     {
         $user = auth()->user();
 
-        $ordersQuery = $user->role==='admin'
+        $ordersQuery = $user->isAdmin()
             ? Order::with(['user', 'items'])
             : Order::with(['user', 'items'])->where('user_id', $user->id);
 
