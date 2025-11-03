@@ -129,7 +129,7 @@ function processPurchase() {
   router.post('/cart/checkout', {}, {
     onSuccess: () => {
       alert('¡Orden de compra realizada! La misma ha sido enviada a los vendedores.');
-      router.visit('/products');
+      router.visit('/orders');
     },
     onError: (errors) => {
       console.error(errors);

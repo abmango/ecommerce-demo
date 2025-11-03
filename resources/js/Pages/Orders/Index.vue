@@ -123,7 +123,7 @@
         <div class="flex justify-between w-full">
           <div>
             <template v-if="(orderRecieved.status == 'pendiente')">
-              <PrimaryButton @click="confirmOrder(orderRecieved.id)" class="mr-2">
+              <PrimaryButton v-if="auth?.user?.role==='admin'" @click="confirmOrder(orderRecieved.id)" class="mr-2">
                 Aprobar
               </PrimaryButton>
               <DangerButton @click="rejectOrder(orderRecieved.id)" class="mr-2">

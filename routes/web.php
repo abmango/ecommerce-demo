@@ -54,7 +54,6 @@ Route::middleware([
 
     // Órdenes de compra
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     
     Route::post('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
