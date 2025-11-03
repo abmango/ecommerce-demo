@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('total', 10, 2);
-            $table->string('status');
+            $table->enum('status', ['pendiente','rechazada','confirmada']);
             $table->timestamps();
         });
     }

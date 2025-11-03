@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->string('cuit', 20)->nullable()->after('email');
             $table->string('phone', 20)->nullable()->after('cuit');
-            $table->enum('preferred_contact_method', ['Correo electrónico', 'Teléfono', 'Whatsapp'])
+            $table->enum('preferred_contact_method', ['email', 'telefono', 'whatsapp'])
                 ->nullable()
                 ->after('phone');
         });
