@@ -1,28 +1,29 @@
 <template>
+
   <Head title="Detalle de producto"></Head>
   <GuestHeader></GuestHeader>
   <div class="container mx-auto py-8 mt-20">
-    <div class="absolute top-0 right-0 mt-4 mr-4">
+    <div class="flex justify-between items-center mb-6">
       <Link href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-      Volver
+        Volver
       </Link>
     </div>
 
     <h1 class="text-2xl font-bold mb-6">{{ product.name }}</h1>
-    <img :src="product.image" alt="Imagen del producto" class="w-64 h-64 object-cover mb-4">
+    <img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto" class="w-64 h-64 object-cover mb-4">
     <p class="text-gray-500">{{ product.description }}</p>
     <p class="text-lg font-bold">Precio: $ {{ product.price }}</p>
     <p class="text-gray-500">Stock: {{ product.stock }}</p>
     <p class="text-gray-500">Tipo: {{ product.type }}</p>
 
     <!-- Botón para agregar al carrito -->
-    
-      <button  v-if="!auth || (auth && auth.user.role === 'user')" @click="addToCart"
-        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Agregar al carrito
-      </button>
 
-    <div v-if="auth && auth.user.role === 'admin'" class="flex space-x-4 mt-4">
+    <button v-if="!isAdmin" @click="addToCart"
+      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      Agregar al carrito
+    </button>
+
+    <div v-if="isAdmin" class="flex space-x-4 mt-4">
       <button @click="deleteProduct"
         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         Dar de baja
@@ -45,6 +46,14 @@ export default {
   props: {
     product: Object,
     auth: Object,
+  },
+  computed: {
+    isLogged() {
+      return this.auth.user != null
+    },
+    isAdmin() {
+      return this.isLogged && this.auth.user.role === 'admin'
+    },
   },
   components: {
     Link,

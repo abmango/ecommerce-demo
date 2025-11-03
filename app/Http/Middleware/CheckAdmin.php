@@ -9,11 +9,11 @@ class CheckAdmin
     public function handle($request, Closure $next)
     {
         if (!auth()->check()) {
-            return response()->json(['success' => false, 'message' => 'Debes iniciar sesión.'], 405);
+            return redirect()->route('login');
         }
 
         if (auth()->user()->role !== 'admin') {
-            return response()->json(['success' => false, 'message' => 'Se requieren permisos de administrador'], 405);
+            return redirect()->route('welcome');
         }
 
         return $next($request);

@@ -7,13 +7,18 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
+use App\Http\Middleware\CheckAdmin;
+use App\Models\Product;
 
 Route::get('/', function () {
+    $products = Product::take(6)->get();
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'products' => $products,
     ]);
 })->name('welcome');
 
@@ -23,9 +28,10 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
+// Esto lo podemos eliminar, era solo para probar el middleware de administrador
 Route::get('/admin-test', function () {
     return 'Accediste a una ruta de administrador';
-})->middleware('admin');
+})->middleware(CheckAdmin::class);
 
 Route::middleware([
     'auth:sanctum',
@@ -37,22 +43,22 @@ Route::middleware([
     })->name('dashboard');
 
     // Agregar, editar o borrar productos
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware(\App\Http\Middleware\CheckAdmin::class);
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware(\App\Http\Middleware\CheckAdmin::class);
-    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(\App\Http\Middleware\CheckAdmin::class);
-    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(\App\Http\Middleware\CheckAdmin::class);
-    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(\App\Http\Middleware\CheckAdmin::class);
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware(CheckAdmin::class);
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware(CheckAdmin::class);
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(CheckAdmin::class);
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(CheckAdmin::class);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(CheckAdmin::class);
 
     // Órdenes de compra
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/;;
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show')/*->middleware(\App\Http\Middleware\CheckAdmin::class)*/;;
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     
     Route::post('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('orders.reject');
 
     // Facturas
     Route::get('/orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
-    Route::post('/orders/{order}/invoice', [OrderController::class, 'uploadInvoice'])->middleware(\App\Http\Middleware\CheckAdmin::class);
+    Route::post('/orders/{order}/invoice', [OrderController::class, 'uploadInvoice'])->middleware(CheckAdmin::class);
 
 
     // Checkout (compra)
