@@ -18,11 +18,19 @@
 
     <!-- Botón para agregar al carrito -->
 
-    <button v-if="!isAdmin" @click="addToCart"
-      class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-      <i class="me-1 fas fa-cart-shopping"></i>
-      <span>Agregar</span>
-    </button>
+    <div v-if="!isAdmin" class="flex space-x-4 mt-4">
+      <button @click="addToCart"
+        class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <i class="me-1 fas fa-cart-shopping"></i>
+        <span>Agregar</span>
+      </button>
+
+      <button @click="processPurchase(product.id)"
+        class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <span>Ordenar</span>
+        <i class="fa-solid fa-circle-chevron-right ms-1"></i>
+      </button>
+    </div>
 
     <div v-if="isAdmin" class="flex space-x-4 mt-4">
       <button @click="deleteProduct"
@@ -72,8 +80,39 @@ export default {
       }
     },
     addToCart() {
-      this.$inertia.post(`/cart/add/${this.product.id}`);
+      return new Promise((resolve, reject) => {
+        this.$inertia.post(`/cart/add/${productId}`, {}, {
+          onSuccess: resolve,
+          onError: reject
+        });
+      });
     },
+    async processPurchase() {
+      try {
+        await this.addToCart();
+        console.log('Producto agregado al carrito, procediendo a la compra.');
+
+        if (!this.isLogged) {
+          alert('Debes iniciar sesión para realizar la compra.');
+          this.$inertia.visit('/login');
+          return;
+        }
+
+        await this.$inertia.post('/cart/checkout', {}, {
+          onSuccess: () => {
+            alert('¡Orden de compra realizada! La misma ha sido enviada a los vendedores.');
+            this.$inertia.visit('/orders');
+          },
+          onError: (errors) => {
+            console.error(errors);
+            alert('Error al procesar la orden.');
+          }
+        });
+      } catch (e) {
+        console.error(e);
+        alert('Ocurrió un error al agregar el producto al carrito.');
+      }
+    }
   },
 };
 </script>
