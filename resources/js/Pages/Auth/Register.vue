@@ -56,13 +56,14 @@ const submit = () => {
                 <InputLabel for="cuit" value="CUIT" />
                 <TextInput id="cuit" v-model="form.cuit" type="cuit" class="mt-1 block w-full" required
                     autocomplete="cuit" />
-                <InputError class="mt-2" :message="'Por favor, ingrese CUIT'" />
+                <InputError v-if="!form.cuit" class="mt-2" :message="'Por favor, ingrese CUIT'" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="phone" value="Teléfono de contacto" />
-                <TextInput id="phone" v-model="form.phone" type="phone" class="mt-1 block w-full"
+                <TextInput id="phone" v-model="form.phone" type="phone" class="mt-1 block w-full" required
                     autocomplete="phone" />
+                <InputError v-if="!form.phone" class="mt-2" :message="'Tiene que ingresar al menos un número de teléfono.'" />
             </div>
 
             <div class="mt-4">
@@ -77,7 +78,8 @@ const submit = () => {
                     <option value="telefono">Teléfono</option>
                     <option value="whatsapp">WhatsApp</option>
                 </select>
-                <InputError class="mt-2" :message="'Por favor, seleccione una opción.'" />
+                <InputError v-if="!form.preferred_contact_method" class="mt-2"
+                    :message="'Por favor, seleccione una opción.'" />
             </div>
 
             <div class="mt-4">
