@@ -91,6 +91,11 @@ export default {
     product: Object,
     auth: Object,
   },
+  data() {
+    return {
+      isLoading: false
+    }
+  },
   computed: {
     isLogged() {
       return this.auth.user != null
@@ -115,6 +120,10 @@ export default {
       }
     },
     addToCart() {
+
+      if (this.isLoading) return
+      this.isLoading = true
+
       return new Promise((resolve, reject) => {
         this.$inertia.post(`/cart/add/${this.product.id}`, {}, {
           onSuccess: resolve,
