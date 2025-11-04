@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { Link, router, useForm } from '@inertiajs/vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import FormSection from '@/Components/FormSection.vue';
@@ -23,7 +23,36 @@ const form = useForm({
     photo: null,
 });
 
-console.log(props.user);
+const touched = reactive({
+    name: false,
+    email: false,
+    cuit: false,
+    phone: false,
+    preferred_contact_method: false,
+})
+
+const errors = reactive({
+    name: 'Ingrese su nombre.',
+    email: 'Debes usar una dirección de correo REAL. Caso contrario, no podrás validarla luego.',
+    cuit: 'Ingrese su CUIT.',
+    phone: 'Ingrese un número de teléfono con código de área sin 0 ni 15.',
+    preferred_contact_method: 'Debe seleccionar un medio de preferencia.',
+})
+
+const isNameValid = computed(() => form.name.trim().length > 0)
+const isEmailValid = computed(() => {
+    const re = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+    return re.test(form.email.trim())
+})
+const isCuitValid = computed(() => /^\d{11}$/.test(form.cuit))
+const isPhoneValid = computed(() => /^\d{10}$/.test(form.phone))
+
+const isFormValid = computed(() =>
+    isNameValid.value &&
+    isEmailValid.value &&
+    isCuitValid.value &&
+    isPhoneValid.value
+)
 
 const verificationLinkSent = ref(null);
 const photoPreview = ref(null);
@@ -32,6 +61,10 @@ const photoInput = ref(null);
 const updateProfileInformation = () => {
     if (photoInput.value) {
         form.photo = photoInput.value.files[0];
+    }
+
+    if (!isFormValid.value) {
+        return;
     }
 
     form.post(route('user-profile-information.update'), {
@@ -123,17 +156,17 @@ const clearPhotoFileInput = () => {
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="name" value="Nombre completo" />
-                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required
-                    autocomplete="name" />
-                <InputError :message="form.errors.name" class="mt-2" />
+                <TextInput id="name" v-model="form.name" type="text" @blur="touched.name = true"
+                    class="mt-1 block w-full" required autocomplete="name" />
+                <InputError v-if="touched.name && !isNameValid" :message="errors.name" class="mt-2" />
             </div>
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" readonly
-                    autocomplete="username" />
-                <InputError :message="form.errors.email" class="mt-2" />
+                <TextInput id="email" v-model="form.email" type="text" @blur="touched.email = true"
+                    class="mt-1 block w-full" readonly autocomplete="username" />
+                <InputError v-if="touched.email && !isEmailValid" :message="errors.email" class="mt-2" />
 
                 <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
                     <p class="text-sm mt-2">
@@ -155,17 +188,17 @@ const clearPhotoFileInput = () => {
             <!-- CUIT -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="cuit" value="CUIT" />
-                <TextInput id="cuit" v-model="form.cuit" type="text" class="mt-1 block w-full" required
-                    autocomplete="cuit" />
-                <InputError v-if="!form.cuit" :message="'Tiene que ingresar un CUIT'" class="mt-2" />
+                <TextInput id="cuit" v-model="form.cuit" type="text" @blur="touched.cuit = true"
+                    class="mt-1 block w-full" required autocomplete="cuit" />
+                <InputError v-if="touched.cuit && !isCuitValid" :message="errors.cuit" class="mt-2" />
             </div>
 
             <!-- Phone -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="phone" value="Teléfono" />
-                <TextInput id="phone" v-model="form.phone" type="text" class="mt-1 block w-full" required
-                    autocomplete="phone" />
-                <InputError v-if="!form.phone" :message="'Ingrese teléfono de contacto'" class="mt-2" />
+                <TextInput id="phone" v-model="form.phone" type="text" @blur="touched.phone = true"
+                    class="mt-1 block w-full" required autocomplete="phone" />
+                <InputError v-if="touched.phone && !isPhoneValid" :message="errors.phone" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4"> <label for="preferred_contact_method"
@@ -178,7 +211,8 @@ const clearPhotoFileInput = () => {
                     <option value="telefono">Teléfono</option>
                     <option value="whatsapp">WhatsApp</option>
                 </select>
-                <InputError v-if="!form.preferred_contact_method" class="mt-2" :message="'Por favor, seleccione una opción.'" />
+                <InputError v-if="!form.preferred_contact_method" class="mt-2"
+                    :message="errors.preferred_contact_method" />
             </div>
         </template>
 

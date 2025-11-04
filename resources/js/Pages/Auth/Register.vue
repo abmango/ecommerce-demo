@@ -38,11 +38,13 @@ const errors = reactive({
 })
 
 const isNameValid = computed(() => form.name.trim().length > 0)
-const isEmailValid = computed(() =>
-    /^[a-z]+@[a-z]+\.[a-z]+(\.[a-z]+)?$/.test(form.email)
+const isEmailValid = computed(() => {
+    const re = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+    return re.test(form.email.trim())
+}
 )
 const isCuitValid = computed(() => /^\d{11}$/.test(form.cuit))
-const isPhoneValid = computed(() => /^\d{10,}$/.test(form.phone))
+const isPhoneValid = computed(() => /^\d{10}$/.test(form.phone))
 
 const isFormValid = computed(() =>
     isNameValid.value &&
