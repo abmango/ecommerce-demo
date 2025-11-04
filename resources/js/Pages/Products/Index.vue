@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import { Head } from '@inertiajs/inertia-vue3';
 import GuestHeader from '@/Components/GuestHeader.vue';
 import ProductLogged from '@/Components/Product/Logged.vue';
 import ProductGuest from '@/Components/Product/Guest.vue';

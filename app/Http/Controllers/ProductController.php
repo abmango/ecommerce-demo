@@ -20,7 +20,7 @@ class ProductController extends Controller
         return Inertia::render('Products/Index', [
             'products' => $products,
             'isLogged' => $request->user(),
-            'isAdmin' => ($request->user() && $request->user()->role === 'admin'),
+            'isAdmin' => $request->user()->isAdmin(),
         ]);
     }
 
@@ -117,7 +117,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
-        return response()->json(['message' => 'Producto dado de baja correctamente']);
+        return redirect()->route('products.index')->with('success', 'Producto dado de baja correctamente');
     }
 
     public function restore($id)

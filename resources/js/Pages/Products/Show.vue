@@ -1,25 +1,18 @@
 <template>
+
   <Head title="Detalle de producto" />
   <GuestHeader />
 
   <div class="container mx-auto mt-24 px-4">
-    <Link
-      href="/products"
-      class="inline-flex items-center mb-6 text-indigo-600 hover:text-indigo-800 font-medium"
-    >
-      <i class="fa-solid fa-arrow-left mr-2"></i> Volver a productos
+    <Link href="/products" class="inline-flex items-center mb-6 text-indigo-600 hover:text-indigo-800 font-medium">
+    <i class="fa-solid fa-arrow-left mr-2"></i> Volver a productos
     </Link>
 
-    <div
-      class="bg-white rounded-2xl shadow-lg p-8 flex flex-col lg:flex-row gap-10"
-    >
+    <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col lg:flex-row gap-10">
       <!-- Imagen -->
       <div class="flex-1 flex justify-center items-center">
-        <img
-          :src="product.image ?? '/images/logo.jpg'"
-          alt="Imagen del producto"
-          class="rounded-xl max-h-[450px] object-contain shadow-sm"
-        />
+        <img :src="product.image ?? '/images/logo.jpg'" alt="Imagen del producto"
+          class="rounded-xl max-h-[450px] object-contain shadow-sm" />
       </div>
 
       <!-- Detalles -->
@@ -45,33 +38,25 @@
 
         <!-- Botones -->
         <div v-if="!isAdmin" class="flex flex-col sm:flex-row gap-4 mt-6">
-          <button
-            @click="addToCart()"
-            class="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
-          >
+          <button @click="addToCart()"
+            class="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition">
             <i class="fa-solid fa-cart-plus"></i> Agregar al carrito
           </button>
 
-          <button
-            @click="processPurchase()"
-            class="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
-          >
+          <button @click="processPurchase()"
+            class="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition">
             <i class="fa-solid fa-bag-shopping"></i> Comprar ahora
           </button>
         </div>
 
         <div v-if="isAdmin" class="flex flex-col sm:flex-row gap-4 mt-6">
-          <Link
-            :href="`/products/${product.id}/edit`"
-            class="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
-          >
-            <i class="fa-solid fa-pen-to-square"></i> Editar producto
+          <Link :href="`/products/${product.id}/edit`"
+            class="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition">
+          <i class="fa-solid fa-pen-to-square"></i> Editar producto
           </Link>
 
-          <button
-            @click="deleteProduct"
-            class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
-          >
+          <button @click="deleteProduct"
+            class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition">
             <i class="fa-solid fa-trash-can"></i> Dar de baja
           </button>
         </div>
@@ -113,10 +98,16 @@ export default {
   methods: {
     deleteProduct() {
       if (confirm('¿Estás seguro de que quieres dar de baja este producto?')) {
-        this.$inertia.delete(`/products/${this.product.id}`)
-          .then(() => {
+        this.$inertia.delete(`/products/${this.product.id}`, {
+          onSuccess: () => {
+            alert('Producto dado de baja correctamente.');
             this.$inertia.visit('/products');
-          });
+          },
+          onError: (errors) => {
+            console.error(errors);
+            alert('Error al dar de baja el producto.');
+          }
+        });
       }
     },
     addToCart() {
