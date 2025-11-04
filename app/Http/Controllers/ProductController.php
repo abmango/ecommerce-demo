@@ -13,12 +13,14 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::withTrashed()->get();
+        $products = Product::withTrashed()->get();        
+
         return Inertia::render('Products/Index', [
             'products' => $products,
-            //'auth' => auth()->user(),
+            'isLogged' => $request->user(),
+            'isAdmin' => ($request->user() && $request->user()->role === 'admin'),
         ]);
     }
 
