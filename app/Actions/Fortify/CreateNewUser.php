@@ -23,7 +23,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'cuit' => ['required', 'digits:11', 'numeric'],
-            'phone' => ['required', 'digits:10', 'numeric'],
+            'phone' => ['required', 'min_digits:10', 'numeric'],
             'preferred_contact_method' => ['required', 'in:email,telefono,whatsapp'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',

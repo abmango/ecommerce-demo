@@ -8,6 +8,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import GuestHeader from '@/Components/GuestHeader.vue';
+import { reactive, computed } from 'vue'
 
 const form = useForm({
     name: '',
@@ -20,7 +21,38 @@ const form = useForm({
     terms: false,
 });
 
+const touched = reactive({
+    name: false,
+    email: false,
+    cuit: false,
+    phone: false,
+    preferred_contact_method: false,
+})
+
+const errors = reactive({
+    name: 'Ingrese su nombre.',
+    email: 'Debes usar una dirección de correo REAL. Caso contrario, no podrás validarla luego.',
+    cuit: 'Ingrese su CUIT.',
+    phone: 'Ingrese un número de teléfono con código de área sin 0 ni 15.',
+    preferred_contact_method: 'Debe seleccionar un medio de preferencia.',
+})
+
+const isNameValid = computed(() => form.name.trim().length > 0)
+const isEmailValid = computed(() =>
+    /^[a-z]+@[a-z]+\.[a-z]+(\.[a-z]+)?$/.test(form.email)
+)
+const isCuitValid = computed(() => /^\d{11}$/.test(form.cuit))
+const isPhoneValid = computed(() => /^\d{10,}$/.test(form.phone))
+
+const isFormValid = computed(() =>
+    isNameValid.value &&
+    isEmailValid.value &&
+    isCuitValid.value &&
+    isPhoneValid.value
+)
+
 const submit = () => {
+    if (!isFormValid.value) return
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
@@ -41,35 +73,38 @@ const submit = () => {
             <h1 class="block pb-1 border-b text-2xl mb-3">Registrate</h1>
             <div>
                 <InputLabel for="name" value="Nombre o Razón Social" />
-                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
-                    autocomplete="name" placeholder="Juan Perez / Distribuidora X S.A" />
-                <InputError class="mt-2" :message="form.errors.name" />
+                <TextInput id="name" v-model="form.name" type="text" @blur="touched.name = true"
+                    class="mt-1 block w-full" required autofocus autocomplete="name"
+                    placeholder="Juan Perez / Distribuidora X S.A" />
+                <InputError v-if="touched.name && !isNameValid" class="mt-2" :message="errors.name" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full" required
-                    autocomplete="username" placeholder="tu@correo.com" />
-                <InputError class="mt-2" :message="form.errors.email" />
+                <TextInput id="email" v-model="form.email" type="email" @blur="touched.email = true"
+                    class="mt-1 block w-full" required autocomplete="username" placeholder="tu@correo.com" />
+                <InputError v-if="touched.email && !isEmailValid" class="mt-2" :message="errors.email" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="cuit" value="CUIT" />
-                <TextInput id="cuit" v-model="form.cuit" type="cuit" class="mt-1 block w-full" required
-                    autocomplete="cuit" placeholder="XXXXXXXXX (sin espacios ni guiones)" />
-                <InputError v-if="!form.cuit" class="mt-2" :message="'Por favor, ingrese CUIT'" />
+                <TextInput id="cuit" v-model="form.cuit" type="cuit" @blur="touched.cuit = true"
+                    class="mt-1 block w-full" required autocomplete="cuit"
+                    placeholder="XXXXXXXXXXX (sin espacios ni guiones)" />
+                <InputError v-if="touched.cuit && !isCuitValid" class="mt-2" :message="errors.cuit" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="phone" value="Teléfono de contacto" />
-                <TextInput id="phone" v-model="form.phone" type="phone" class="mt-1 block w-full" required
-                    autocomplete="phone" placeholder="XXXXXXXXXX" />
-                <InputError v-if="!form.phone" class="mt-2" :message="'Tiene que ingresar al menos un número de teléfono.'" />
+                <TextInput id="phone" v-model="form.phone" type="phone" @blur="touched.phone = true"
+                    class="mt-1 block w-full" required autocomplete="phone" placeholder="XXXXXXXXXX" />
+                <InputError v-if="touched.phone && !isPhoneValid" class="mt-2" :message="errors.phone" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="preferred_contact_method" value="Medio de contacto preferido"></InputLabel>
                 <select id="preferred_contact_method" v-model="form.preferred_contact_method"
+                    @blur="touched.preferred_contact_method = true"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     required>
                     <option disabled value="">Seleccione un medio</option>
@@ -78,7 +113,7 @@ const submit = () => {
                     <option value="whatsapp">WhatsApp</option>
                 </select>
                 <InputError v-if="!form.preferred_contact_method" class="mt-2"
-                    :message="'Por favor, seleccione una opción.'" />
+                    :message="errors.preferred_contact_method" />
             </div>
 
             <div class="mt-4">
