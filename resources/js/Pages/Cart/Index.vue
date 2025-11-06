@@ -40,29 +40,23 @@
 
       <!-- Botón para procesar la compra -->
       <div class="mt-4 text-right">
-        <button @click="processPurchase" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Comprar
-        </button>
+
       </div>
     </div>
     <div v-else>
       <p class="text-center text-gray-500">El carrito está vacío.</p>
 
     </div>
-    <div class="flex justify-end mb-4">
-
-      <InertiaLink href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 rounded">
-        Agregar más productos
-      </InertiaLink>
-    </div>
+    <CartActionButtons :is-empty="cart.length === 0" :proceedToCheckoutUrl="processPurchase" />
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { Head, router, Link as InertiaLink } from '@inertiajs/vue3';
-import GuestHeader from '../../Components/GuestHeader.vue';
+import GuestHeader from '@/Components/GuestHeader.vue';
 import axios from 'axios';
+import CartActionButtons from '@/Components/Cart/ActionButtons.vue';
 
 // Props
 const props = defineProps({
