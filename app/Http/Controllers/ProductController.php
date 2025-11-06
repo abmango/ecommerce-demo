@@ -15,12 +15,19 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::withTrashed()->get();        
+        $isLogged = $request->user() ?? false;
+        $isAdmin = $request->user()?->isAdmin() ?? false;
+        
+        if($isAdmin) {
+            $products = Product::withTrashed()->get();  
+        } else {
+            $products = Product::all();
+        }
 
         return Inertia::render('Products/Index', [
             'products' => $products,
-            'isLogged' => $request->user(),
-            'isAdmin' => $request->user()?->isAdmin() ?? false,
+            'isLogged' => $isLogged,
+            'isAdmin' => $isAdmin,
         ]);
     }
 
