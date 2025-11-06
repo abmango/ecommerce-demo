@@ -20,7 +20,7 @@ class ProductController extends Controller
         return Inertia::render('Products/Index', [
             'products' => $products,
             'isLogged' => $request->user(),
-            'isAdmin' => $request->user()->isAdmin(),
+            'isAdmin' => $request->user()?->isAdmin() ?? false,
         ]);
     }
 
