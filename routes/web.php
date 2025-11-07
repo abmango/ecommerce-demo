@@ -51,7 +51,6 @@ Route::middleware([
     Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(CheckAdmin::class);
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(CheckAdmin::class);
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(CheckAdmin::class);
-    Route::put('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore')->middleware(CheckAdmin::class);
 
     // Órdenes de compra
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
