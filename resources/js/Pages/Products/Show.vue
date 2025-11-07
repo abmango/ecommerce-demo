@@ -37,7 +37,7 @@
         </div>
 
         <!-- Botones -->
-        <div v-if="!isAdmin" class="flex flex-col sm:flex-row gap-4 mt-6">
+        <div v-if="!isAdmin && product.stock > 0" class="flex flex-col sm:flex-row gap-4 mt-6">
           <button @click="addToCart()"
             class="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition">
             <i class="fa-solid fa-cart-plus"></i> Agregar al carrito
