@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
                             la producción de pastelería tradicional destinada a la colectividad japonesa.
                         </p>
                         <p class="mb-4">
-                            En las celebraciones y conmemoraciones del calendario japonés Fuji Foods se encarga de
+                            En las celebraciones y conmemoraciones del calendario japonés, FujiFoods Sansendo se encarga de
                             confeccionar noshimochi para hacer
                             yakimochi a la plancha o kagami mochi para ofrendar en el altar budista y decorar la casa
                             para recibir el nuevo año.
