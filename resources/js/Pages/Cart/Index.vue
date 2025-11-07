@@ -30,7 +30,7 @@
                 <div class="flex justify-start">
                   <SecondaryButton class="bg-slate-100" @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-
                   </SecondaryButton>
-                  <TextInput type="number" v-model="item.quantity" @change="updateQuantity(item.id, item.quantity)"
+                  <TextInput v-model="item.quantity" @input="updateQuantity(item)"
                     class="mx-2" />
                   <SecondaryButton class="bg-slate-100" @click="increaseQuantity(item)">+</SecondaryButton>
                 </div>
@@ -89,22 +89,23 @@ const total = computed(() => {
 
 function increaseQuantity(item) {
   item.quantity++;
-  updateQuantity(item.id, item.quantity);
-  updateQuantity.flush();
+  updateQuantity(item);  
 }
 
 function decreaseQuantity(item) {
   if (item.quantity > 1) {
     item.quantity--;
-    updateQuantity(item.id, item.quantity);
-    updateQuantity.flush();
+    updateQuantity(item);    
   }
 }
 
-const updateQuantity = debounce(updateQuantityOnSession, 500);
+const updateQuantity = debounce(updateQuantityOnSession, 750);
 
 // Methods
-function updateQuantityOnSession(id, quantity) {
+function updateQuantityOnSession(item) {
+
+  const { id, quantity } = item;
+
   if (quantity < 1) {
     alert('La cantidad debe ser al menos 1');
     router.reload();
@@ -114,7 +115,7 @@ function updateQuantityOnSession(id, quantity) {
 
   isCartBeingUpdated.value = true;
 
-  axios.post(`/cart/update/${id}`, { quantity: quantity })
+  axios.post(`/cart/update/${id}`, { quantity })
     .then(response => {
       console.log('Update response:', response);
       if (response.data.success) {
