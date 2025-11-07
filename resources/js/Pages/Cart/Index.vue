@@ -2,7 +2,7 @@
   <GuestHeader />
 
   <Head title="Carrito"></Head>
-  <div class="container mx-auto pt-24">
+  <div class="container mx-auto bg-white p-6 rounded shadow mt-32">
     <h1 class="text-2xl font-bold mb-6 text-center">Carrito de Compras</h1>
 
     <div v-if="cart.length > 0" class="overflow-x-auto relative">
@@ -15,39 +15,46 @@
             <th class="py-2 px-4 border border-gray-300 text-center bg-gray-200">Producto</th>
             <!-- th class="py-2 px-4 border border-gray-300 text-center bg-gray-200">Cantidad</th -->
             <th class="py-2 px-4 border border-gray-300 text-center bg-gray-200">Precio x unidad</th>
+            <th class="py-2 px-4 border border-gray-300 text-center bg-gray-200">Cantidad</th>
             <th class="py-2 px-4 border border-gray-300 text-center bg-gray-200">Subtotal</th>
-            <th class="py-2 px-4 border border-gray-300 text-center bg-gray-200">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in cart" :key="item.id" class="text-center">
-            <td class="py-2 px-4 border border-gray-300">{{ item.name }}</td>
+            <td class="py-2 px-4 border border-gray-300">      
+              <div class="flex items-top">
+                <img :src="item.image" alt="Imagen del producto" class="w-16 h-16 object-cover mr-4" />
+                <div class="text-start">
+                  <h3 class="font-semibold text-lg">{{ item.name }}</h3>  
+                  <p>
+                    <b class="underline text-sm text-red-500 cursor-pointer" @click="removeFromCart(item.id)">Eliminar</b>
+                  </p> 
+                </div>
+              </div>
+            </td>
             <!-- td class="py-2 px-4 border border-gray-300">{{ item.quantity }}</td -->
-            <td class="py-2 px-4 border border-gray-300">${{ item.price }}</td>
-            <td class="py-2 px-4 border border-gray-300">${{ (item.price * item.quantity).toFixed(2) }}</td>
+            <td class="py-2 px-4 border border-gray-300">${{ item.price }}</td>            
             <td class="py-2 border-0 border-gray-300">
-              <div class="flex justify-start gap-2">
-                <div class="flex justify-start">
+              <div class="flex justify-center gap-2">
+                <div class="flex justify-center">
                   <SecondaryButton class="bg-slate-100" @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-
                   </SecondaryButton>
                   <TextInput v-model="item.quantity" @input="updateQuantity(item)"
                     class="mx-2" />
                   <SecondaryButton class="bg-slate-100" @click="increaseQuantity(item)">+</SecondaryButton>
                 </div>
-                <button @click="removeFromCart(item.id)"
-                  class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
-                  Eliminar
-                </button>
               </div>
             </td>
+            <td class="py-2 px-4 border border-gray-300">${{ (item.price * item.quantity).toFixed(2) }}</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>            
+            <td colspan="4" class="py-2 px-4 border border-gray-300 font-bold" style="text-align: end;">Total: ${{ total.toFixed(2) }}</td>
+          </tr>
+        </tfoot>
       </table>
 
-      <!-- Total -->
-      <div class="mt-4 text-right">
-        <p class="text-xl font-bold">Total: ${{ total.toFixed(2) }}</p>
-      </div>
 
       <!-- Botón para procesar la compra -->
       <div class="mt-4 text-right">
