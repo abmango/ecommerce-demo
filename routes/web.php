@@ -50,6 +50,7 @@ Route::middleware([
     Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware(CheckAdmin::class);
     Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware(CheckAdmin::class);
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware(CheckAdmin::class);
+    Route::put('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore')->middleware(CheckAdmin::class);
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware(CheckAdmin::class);
 
     // Órdenes de compra

@@ -1,8 +1,24 @@
 <script setup>
-import {  Link as InertiaLink } from '@inertiajs/vue3';
+import { Link as InertiaLink } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
+
 const props = defineProps({
     products: Array
 });
+
+function restoreProduct(id) {
+    if (confirm('¿Seguro que deseas restaurar este producto?')) {
+        router.put(`/products/${id}/restore`, {}, {
+            onSuccess: () => {
+                alert('Producto restaurado correctamente.');
+            },
+            onError: (errors) => {
+                console.error(errors);
+                alert('Hubo un error al restaurar el producto.');
+            }
+        });
+    }
+}
 </script>
 <template>
     <div>
@@ -34,10 +50,14 @@ const props = defineProps({
                             class="text-green-500 font-semibold">Disponible</span>
                     </td>
                     <td class="py-2 px-4 border border-gray-300">
-                        <InertiaLink :href="`/products/${product.id}`"
+                        <InertiaLink v-if="!product.deleted_at" :href="`/products/${product.id}`"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
                             Ver Detalles
                         </InertiaLink>
+                        <button v-else @click="restoreProduct(product.id)"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                            Restaurar
+                        </button>
                     </td>
                 </tr>
             </tbody>
