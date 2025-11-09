@@ -83,23 +83,23 @@ const submit = () => {
 
             <div class="mt-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput id="email" v-model="form.email" type="email" @blur="touched.email = true"
+                <TextInput id="email" v-model="form.email" type="text" @blur="touched.email = true"
                     class="mt-1 block w-full" required autocomplete="username" placeholder="tu@correo.com" />
                 <InputError v-if="touched.email && !isEmailValid" class="mt-2" :message="errors.email" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="cuit" value="CUIT" />
-                <TextInput id="cuit" v-model="form.cuit" type="cuit" @blur="touched.cuit = true"
-                    class="mt-1 block w-full" required autocomplete="cuit"
+                <TextInput id="cuit" v-model="form.cuit" type="text" @blur="touched.cuit = true"
+                    filterType="numeric" class="mt-1 block w-full" required
                     placeholder="XXXXXXXXXXX (sin espacios ni guiones)" />
                 <InputError v-if="touched.cuit && !isCuitValid" class="mt-2" :message="errors.cuit" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="phone" value="Teléfono de contacto" />
-                <TextInput id="phone" v-model="form.phone" type="phone" @blur="touched.phone = true"
-                    class="mt-1 block w-full" required autocomplete="phone" placeholder="XXXXXXXXXX" />
+                <TextInput id="phone" v-model="form.phone" type="text" @blur="touched.phone = true"
+                    filterType="phone" class="mt-1 block w-full" required placeholder="XXXXXXXXXX (código de área sin 0 ni 15)" />
                 <InputError v-if="touched.phone && !isPhoneValid" class="mt-2" :message="errors.phone" />
             </div>
 
