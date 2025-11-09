@@ -189,7 +189,7 @@ const clearPhotoFileInput = () => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="cuit" value="CUIT" />
                 <TextInput id="cuit" v-model="form.cuit" type="text" @blur="touched.cuit = true"
-                    class="mt-1 block w-full" required autocomplete="cuit" />
+                    filterType="numeric" class="mt-1 block w-full" required autocomplete="cuit" />
                 <InputError v-if="touched.cuit && !isCuitValid" :message="errors.cuit" class="mt-2" />
             </div>
 
@@ -197,7 +197,7 @@ const clearPhotoFileInput = () => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="phone" value="Teléfono" />
                 <TextInput id="phone" v-model="form.phone" type="text" @blur="touched.phone = true"
-                    class="mt-1 block w-full" required autocomplete="phone" />
+                    filterType="phone" class="mt-1 block w-full" required autocomplete="phone" />
                 <InputError v-if="touched.phone && !isPhoneValid" :message="errors.phone" class="mt-2" />
             </div>
 
