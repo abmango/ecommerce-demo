@@ -80,13 +80,6 @@ class OrderController extends Controller
 
     public function downloadInvoice(Order $order)
     {
-        // Comento esto porque no es necesario chequear el estado en este caso
-        /*
-        if (!$order->status == 'Confirmada') {
-            abort(403, 'La orden no fue confirmada.');
-        }
-        */
-
         $path = storage_path('app/' . $order->invoice_path);
 
         if (!file_exists($path)) {
@@ -100,6 +93,10 @@ class OrderController extends Controller
     {
         if (!$order->exists) {
             abort(404, 'Orden no encontrada.');
+        }
+
+        if (!$order->status == 'Confirmada') {
+            abort(403, 'La orden no fue confirmada.');
         }
 
         $request->validate([
