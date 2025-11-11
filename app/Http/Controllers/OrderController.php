@@ -80,11 +80,11 @@ class OrderController extends Controller
 
     public function downloadInvoice(Order $order)
     {
-        if (!$order->approved) {
-            abort(403);
+        if (!$order->status == 'Confirmada') {
+            abort(403, 'La orden no fue confirmada.');
         }
 
-        $path = storage_path('app/' . $order->factura_path);
+        $path = storage_path('app/' . $order->invoice_path);
 
         if (!file_exists($path)) {
             abort(404, 'Factura no encontrada.');

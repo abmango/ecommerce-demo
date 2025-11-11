@@ -31,21 +31,4 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    // public function getInvoicePathAttribute($value)
-    // {
-    //     if ($value) {
-    //         return $value; // usa lo que haya en la BD
-    //     }
-
-    //     // Verificá si el archivo existe antes de asumir que hay uno
-    //     $generatedPath = "invoices/20150978387_011_00005_" . str_pad($this->id, 8, '0', STR_PAD_LEFT) . ".pdf";
-
-    //     if (\Storage::disk('public')->exists($generatedPath)) {
-    //         return $generatedPath;
-    //     }
-
-    //     return null;
-    // }
-
 }
