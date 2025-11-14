@@ -10,6 +10,15 @@ import axios from 'axios';
 
 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
 
+const token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+    // 2. Configura Axios para enviar el token en la cabecera 'X-CSRF-TOKEN'
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+    console.error('CSRF token not found: Asegúrate de tener la meta tag en tu plantilla Blade.');
+}
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
