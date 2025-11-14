@@ -9,7 +9,6 @@ services:
     container_name: apache_server
     ports:
       - "8080:80"
-      - '5173:5173' # <<-- ¡AGREGA ESTA LÍNEA!
     volumes:
       - .:/var/www/html
     depends_on:
