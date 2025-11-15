@@ -1,83 +1,73 @@
 <template>
   <GuestHeader />
   <div class="container mx-auto p-8 mt-20">
-    <h1 class="text-2xl font-bold mb-6">Crear Nuevo Producto</h1>
-
     <!-- Formulario de creación de productos -->
-    <form @submit.prevent="submitForm" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
-
-      <!-- Campo Nombre del Producto -->
-      <div class="mb-4">
-        <label for="name" class="block text-gray-700">Nombre del Producto</label>
-        <input v-model="form.name" type="text" id="name" class="w-full p-2 border border-gray-300 rounded mt-1"
-          placeholder="Nombre del producto">
+    <form @submit.prevent="submitCreation" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+      <h1 class="text-2xl font-semibold mb-4 pb-1 border-b block">Crear nuevo producto</h1>
+      <div class="mb-2">
+        <InputLabel for="name" value="Nombre del producto" />
+        <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
+          autocomplete="name" placeholder="Nombre del producto" />
+        <InputError class="mt-2" :message="form.errors.name" />
       </div>
-
-      <!-- Campo Precio del Producto -->
-      <div class="mb-4">
-        <label for="price" class="block text-gray-700">Precio</label>
-        <input v-model="form.price" type="number" step="0.01" id="price"
-          class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Precio del producto">
+      <div class="mb-2">
+        <InputLabel for="price" value="Precio" />
+        <TextInput id="price" type="number" v-model="form.price" class="mt-1 block w-full" required autofocus
+          autocomplete="price" placeholder="0.00" />
+        <InputError class="mt-2" :message="form.errors.price" />
       </div>
-
-      <!-- Campo Descripción del Producto -->
-      <div class="mb-4">
-        <label for="description" class="block text-gray-700">Descripción</label>
-        <textarea v-model="form.description" id="description" class="w-full p-2 border border-gray-300 rounded mt-1"
-          placeholder="Descripción del producto"></textarea>
+      <div class="mb-2">
+        <InputLabel for="image" value="Link de la imagen de producto" />
+        <TextInput id="image" v-model="form.image" type="text" class="mt-1 block w-full" required autofocus
+          autocomplete="image" placeholder="Link de la imagen de producto" />
+        <InputError class="mt-2" :message="form.errors.image" />
       </div>
-
-      <!-- Campo Imagen (URL) -->
-      <div class="mb-4">
-        <label for="image" class="block text-gray-700">URL de la Imagen</label>
-        <input v-model="form.image" type="text" id="image" class="w-full p-2 border border-gray-300 rounded mt-1"
-          placeholder="URL de la imagen del producto">
+      <div class="mb-2">
+        <InputLabel for="stock" value="Stock" />
+        <TextInput id="stock" type="number" v-model="form.stock" class="mt-1 block w-full" required autofocus
+          autocomplete="stock" placeholder="0" />
+        <InputError class="mt-2" :message="form.errors.stock" />
       </div>
-
-      <!-- Campo Stock -->
-      <div class="mb-4">
-        <label for="stock" class="block text-gray-700">Stock</label>
-        <input v-model="form.stock" type="number" id="stock" class="w-full p-2 border border-gray-300 rounded mt-1"
-          placeholder="Cantidad en stock">
+      <div class="mb-2">
+        <InputLabel for="tipo" value="Tipo de producto" />
+        <TextInput id="tipo" v-model="form.type" type="text" class="mt-1 block w-full" required autofocus
+          autocomplete="tipo" placeholder="Tipo de producto (ej.: telefonía, pastelería, deportes)" />
+        <InputError class="mt-2" :message="form.errors.type" />
       </div>
-
-      <!-- Campo Tipo de Producto -->
-      <div class="mb-4">
-        <label for="type" class="block text-gray-700">Tipo de Producto</label>
-        <input v-model="form.type" type="text" id="type" class="w-full p-2 border border-gray-300 rounded mt-1"
-          placeholder="Tipo de producto (ej: electrónico, ropa)">
+      <div class="mb-2">
+        <InputLabel for="description" value="Descripcion" />
+        <textarea v-model="form.description" id="description" rows="4"
+          class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Descripción del producto"></textarea>
+        <InputError class="mt-2" :message="form.errors.description" />
       </div>
 
       <!-- Botón de Enviar -->
-      <div class="flex justify-between mt-4">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Crear Producto
-        </button>
-
-        <Link href="/products" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-20">
-          Volver
-        </Link>
+      <div class="flex justify-end gap-3 items-center mt-4">
+        <PrimaryButton class="">Guardar</PrimaryButton>
+        <Link class="block underline">Volver</Link>
       </div>
     </form>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
 import GuestHeader from '@/Components/GuestHeader.vue'
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, useForm } from '@inertiajs/inertia-vue3';
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/InputError.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-const form = reactive({
+const form = useForm({
   name: '',
   description: '',
-  price: '',
+  price: "",
   image: '',
   stock: '',
   type: ''
 })
 
-const submitForm = () => {
-  Inertia.post('/products', form)
+const submitCreation = () => {
+  form.post(route('products.store'))
 }
 </script>
