@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
 
 
 class ProductController extends Controller
@@ -17,9 +19,9 @@ class ProductController extends Controller
     {
         $isLogged = $request->user() ?? false;
         $isAdmin = $request->user()?->isAdmin() ?? false;
-        
-        if($isAdmin) {
-            $products = Product::withTrashed()->get();  
+
+        if ($isAdmin) {
+            $products = Product::withTrashed()->get();
         } else {
             $products = Product::all();
         }
@@ -44,30 +46,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        
+        Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'image' => 'nullable|string',
+            'stock' => 'required|integer|min:0',
+            'type' => 'required|string|max:100',
+        ])->validate();
 
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'price' => 'required|numeric',
-                'description' => 'nullable|string',
-                'image' => 'nullable|string',
-                'stock' => 'required|integer|min:0',
-                'type' => 'required|string|max:100',
-            ]);
 
-            Product::create([
-                'name' => $request->name,
-                'price' => $request->price,
-                'description' => $request->description,
-                'image' => $request->image,
-                'stock' => $request->stock,
-                'type' => $request->type,
-            ]);
+        Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description ?? null,
+            'image' => $request->image ?? null,
+            'stock' => $request->stock,
+            'type' => $request->type,
+        ]);
 
-            return redirect()->route('products.index')->with('success', 'Producto creado exitosamente');
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
+        return redirect()->route('products.index')->with('success', 'Producto creado exitosamente');
     }
 
 

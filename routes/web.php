@@ -31,10 +31,6 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
-// Esto lo podemos eliminar, era solo para probar el middleware de administrador
-Route::get('/admin-test', function () {
-    return 'Accediste a una ruta de administrador';
-})->middleware(CheckAdmin::class);
 
 Route::middleware([
     'auth:sanctum',
