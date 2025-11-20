@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
-
+use Throwable;
 
 class ProductController extends Controller
 {
@@ -46,27 +46,36 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        
-        Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'description' => 'nullable|string',
-            'image' => 'nullable|string',
-            'stock' => 'required|integer|min:0',
-            'type' => 'required|string|max:100',
-        ])->validate();
+        try {
 
+            logger()->debug('Creando producto');
 
-        Product::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description ?? null,
-            'image' => $request->image ?? null,
-            'stock' => $request->stock,
-            'type' => $request->type,
-        ]);
+            $request->validate( [
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric',
+                'description' => 'nullable|string',
+                'image' => 'nullable|string',
+                'stock' => 'required|integer|min:0',
+                'type' => 'required|string|max:100',
+            ]);        
 
-        return redirect()->route('products.index')->with('success', 'Producto creado exitosamente');
+            Product::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'description' => $request->description,
+                'image' => $request->image,
+                'stock' => $request->stock,
+                'type' => $request->type,
+            ]);
+
+            return redirect()->back()->with('message', 'Producto creado correctamente.');
+
+        } catch (Throwable $e) {
+            
+            logger()->error('errores en alta producto >>> ' . $e->getTraceAsString());
+
+        }
+
     }
 
 

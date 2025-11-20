@@ -17,11 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
             //\App\Http\Middleware\CheckAdmin::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
-        $middleware->validateCsrfTokens(except: [
+        $middleware->validateCsrfTokens( [
             '/login',
             '/logout',
-            '/orders',
-            '/products',
+            '/orders/*',
+            '/products/*',
         ]);
 
         //$middleware->alias(['admin' => \App\Http\Middleware\CheckAdmin::class]);
