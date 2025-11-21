@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->web(append: [
+        $middleware->web( [
             \App\Http\Middleware\HandleInertiaRequests::class,
             //\App\Http\Middleware\CheckAdmin::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
@@ -20,8 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens( [
             '/login',
             '/logout',
-            '/orders/*',
-            '/products/*',
+            '/orders',
+            '/products',
         ]);
 
         //$middleware->alias(['admin' => \App\Http\Middleware\CheckAdmin::class]);
