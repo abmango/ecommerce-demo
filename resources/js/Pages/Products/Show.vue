@@ -67,7 +67,7 @@
 
 
 <script>
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import DeleteProduct from './Delete.vue';
 import GuestHeader from '@/Components/GuestHeader.vue';
 
