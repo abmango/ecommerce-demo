@@ -50,7 +50,7 @@
         </div>
 
         <div v-if="isAdmin" class="flex flex-col sm:flex-row gap-4 mt-6">
-          <Link :href="`/products/${product.id}/edit`"
+          <Link :href="route('product.edit', { id: product.id })"
             class="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition">
           <i class="fa-solid fa-pen-to-square"></i> Editar producto
           </Link>
