@@ -12,12 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->web(append: [
+        $middleware->web( [
             \App\Http\Middleware\HandleInertiaRequests::class,
             //\App\Http\Middleware\CheckAdmin::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
-        $middleware->validateCsrfTokens(except: [
+        $middleware->validateCsrfTokens( [
             '/login',
             '/logout',
             '/orders',

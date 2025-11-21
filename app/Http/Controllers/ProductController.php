@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class ProductController extends Controller
 {
@@ -17,9 +19,9 @@ class ProductController extends Controller
     {
         $isLogged = $request->user() ?? false;
         $isAdmin = $request->user()?->isAdmin() ?? false;
-        
-        if($isAdmin) {
-            $products = Product::withTrashed()->get();  
+
+        if ($isAdmin) {
+            $products = Product::withTrashed()->get();
         } else {
             $products = Product::all();
         }
@@ -36,7 +38,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Products/Create');
+        return Inertia::render('Products/Create', [
+            'success' => request()->session()->get('success') ?? null
+        ]);
     }
 
     /**
@@ -44,30 +48,40 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
         try {
-            $request->validate([
+
+            $vadation = Validator::make($request->all(),[
                 'name' => 'required|string|max:255',
                 'price' => 'required|numeric',
                 'description' => 'nullable|string',
                 'image' => 'nullable|string',
                 'stock' => 'required|integer|min:0',
                 'type' => 'required|string|max:100',
-            ]);
+            ]);      
 
-            Product::create([
+            $vadation->validate();
+
+            $product = Product::create([
                 'name' => $request->name,
                 'price' => $request->price,
-                'description' => $request->description,
-                'image' => $request->image,
+                'description' => $request->description ?? null,
+                'image' => $request->image ?? null,
                 'stock' => $request->stock,
                 'type' => $request->type,
             ]);
 
-            return redirect()->route('products.index')->with('success', 'Producto creado exitosamente');
-        } catch (\Exception $e) {
-            dd($e->getMessage());
+            logger()->debug('producto creado > ', (array)$product);
+
+            return redirect()->route('products.create')->with('success', true);
+
+        } catch (Throwable $e) {
+            
+            logger()->error('errores en alta producto >>> ' . $e->getTraceAsString());
+
+            return redirect()->route('products.create')->with('success', false);
+
         }
+
     }
 
 
@@ -79,7 +93,6 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return Inertia::render('Products/Show', [
             'product' => $product,
-            //'auth' => auth()->user(),
         ]);
     }
 
@@ -91,7 +104,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return Inertia::render('Products/Edit', [
             'product' => $product,
-            'id' => $product->id,
+            'success' => request()->session()->get('success') ?? null            
         ]);
     }
 
@@ -113,7 +126,7 @@ class ProductController extends Controller
 
         $product->update($request->all());
 
-        return Inertia::render('Products/Show', ['product' => $product]);
+        return redirect()->route('products.edit', ['id' => $id])->with('success', true)->with('product', $product);
     }
 
     /**

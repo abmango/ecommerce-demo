@@ -18,7 +18,6 @@ class IsEmailVerified
      */
     public function handle($request, Closure $next, $redirectToRoute = null)
     {
-        logger()->info('IsEmailVerified middleware triggered.');
         if (!$request->user() || ($request->user() && is_null($request->user()->email_verified_at))) {
             return $request->expectsJson()
                     ? abort(403, 'Tu cuenta no ha sido verificada.')
