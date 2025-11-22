@@ -68,7 +68,6 @@
 
 <script>
 import { Head, Link } from '@inertiajs/vue3';
-import DeleteProduct from './Delete.vue';
 import GuestHeader from '@/Components/GuestHeader.vue';
 
 export default {
@@ -91,7 +90,6 @@ export default {
   },
   components: {
     Link,
-    DeleteProduct,
     Head,
     GuestHeader
   },
