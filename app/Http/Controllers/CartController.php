@@ -106,16 +106,16 @@ class CartController extends Controller
                 $product = $cartItem->product;
 
                 if ($validatedData['quantity'] > $product->stock) {
-                    return response()->json(['success' => false, 'message' => 'No hay suficiente stock para esta cantidad'], 400);
+                    return back()->withErrors(['quantity' => 'No hay suficiente stock para esta cantidad']);
                 }
 
                 $cartItem->quantity = $validatedData['quantity'];
                 $cartItem->save();
 
-                return response()->json(['success' => true]);
+                return back()->with('success', 'Cantidad actualizada correctamente');
             }
 
-            return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
+            return back()->with('error', 'Producto no encontrado en el carrito');
         } else {
             $cart = session()->get('cart', []);
 
@@ -123,19 +123,18 @@ class CartController extends Controller
                 $product = Product::find($id);
 
                 if ($validatedData['quantity'] > $product->stock) {
-                    return response()->json(['success' => false, 'message' => 'No hay suficiente stock para esta cantidad'], 400);
+                    return back()->withErrors(['quantity' => 'No hay suficiente stock para esta cantidad']);
                 }
 
                 $cart[$id]['quantity'] = $validatedData['quantity'];
                 session()->put('cart', $cart);
 
-                return response()->json(['success' => true]);
+                return back()->with('success', 'Cantidad actualizada correctamente');
             }
 
-            return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
+            return back()->with('error', 'Producto no encontrado en el carrito');
         }
     }
-
 
     public function remove($id)
     {
@@ -145,10 +144,10 @@ class CartController extends Controller
             if ($cartItem) {
                 $cartItem->delete();
 
-                return response()->json(['success' => true]);
+                return back()->with('success');
             }
 
-            return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
+            return back()->with('error', 'Producto no encontrado en el carrito');
         } else {
             $cart = session()->get('cart', []);
 
@@ -156,10 +155,10 @@ class CartController extends Controller
                 unset($cart[$id]);
                 session()->put('cart', $cart);
 
-                return response()->json(['success' => true]);
+                return back()->with('success');
             }
 
-            return response()->json(['success' => false, 'message' => 'Producto no encontrado en el carrito'], 404);
+            return back()->with('error', 'Producto no encontrado en el carrito');
         }
     }
 

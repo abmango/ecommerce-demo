@@ -21,26 +21,26 @@
         </thead>
         <tbody>
           <tr v-for="item in cart" :key="item.id" class="text-center">
-            <td class="py-2 px-4 border border-gray-300">      
+            <td class="py-2 px-4 border border-gray-300">
               <div class="flex items-top">
                 <img :src="item.image" alt="Imagen del producto" class="w-16 h-16 object-cover mr-4" />
                 <div class="text-start">
-                  <h3 class="font-semibold text-lg">{{ item.name }}</h3>  
+                  <h3 class="font-semibold text-lg">{{ item.name }}</h3>
                   <p>
-                    <b class="underline text-sm text-red-500 cursor-pointer" @click="removeFromCart(item.id)">Eliminar</b>
-                  </p> 
+                    <b class="underline text-sm text-red-500 cursor-pointer"
+                      @click="removeFromCart(item.id)">Eliminar</b>
+                  </p>
                 </div>
               </div>
             </td>
             <!-- td class="py-2 px-4 border border-gray-300">{{ item.quantity }}</td -->
-            <td class="py-2 px-4 border border-gray-300">${{ item.price }}</td>            
+            <td class="py-2 px-4 border border-gray-300">${{ item.price }}</td>
             <td class="py-2 border-0 border-gray-300">
               <div class="flex justify-center gap-2">
                 <div class="flex justify-center">
                   <SecondaryButton class="bg-slate-100" @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-
                   </SecondaryButton>
-                  <TextInput v-model="item.quantity" @input="updateQuantity(item)"
-                    class="mx-2" />
+                  <TextInput v-model="item.quantity" @input="updateQuantity(item)" class="mx-2" />
                   <SecondaryButton class="bg-slate-100" @click="increaseQuantity(item)">+</SecondaryButton>
                 </div>
               </div>
@@ -49,8 +49,9 @@
           </tr>
         </tbody>
         <tfoot>
-          <tr>            
-            <td colspan="4" class="py-2 px-4 border border-gray-300 font-bold" style="text-align: end;">Total: ${{ total.toFixed(2) }}</td>
+          <tr>
+            <td colspan="4" class="py-2 px-4 border border-gray-300 font-bold" style="text-align: end;">Total: ${{
+              total.toFixed(2) }}</td>
           </tr>
         </tfoot>
       </table>
@@ -73,7 +74,6 @@
 import { computed, ref } from 'vue';
 import { Head, router, Link as InertiaLink } from '@inertiajs/vue3';
 import GuestHeader from '@/Components/GuestHeader.vue';
-import axios from 'axios';
 import CartActionButtons from '@/Components/Cart/ActionButtons.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -96,13 +96,13 @@ const total = computed(() => {
 
 function increaseQuantity(item) {
   item.quantity++;
-  updateQuantity(item);  
+  updateQuantity(item);
 }
 
 function decreaseQuantity(item) {
   if (item.quantity > 1) {
     item.quantity--;
-    updateQuantity(item);    
+    updateQuantity(item);
   }
 }
 
@@ -122,34 +122,27 @@ function updateQuantityOnSession(item) {
 
   isCartBeingUpdated.value = true;
 
-  axios.post(`/cart/update/${id}`, { quantity })
-    .then(response => {
-      console.log('Update response:', response);
-      if (response.data.success) {
-        router.reload();
-      } else {
-        alert('Error al actualizar la cantidad: ' + response.data.message);
-        router.reload();
+  router.post(`/cart/update/${id}`, { quantity },
+    {
+      preserveScroll: true,
+      preserveState: true,
+      onSuccess: () => {
+        console.log('Cantidad actualizada correctamente');
+      },
+      onError: (errors) => {
+        if (errors.quantity) {
+          alert(errors.quantity);
+        }
+      },
+      onFinish: () => {
+        isCartBeingUpdated.value = false;
       }
-    })
-    .catch(error => {
-      if (error.response) {
-        console.error('Error en la petición:', error.response.data);
-        alert('Error al actualizar la cantidad: ' + error.response.data.message);
-        router.reload();
-      } else if (error.request) {
-        console.error('No se recibió respuesta del servidor:', error.request);
-      } else {
-        console.error('Error al configurar la petición:', error.message);
-      }
-    })
-    .finally(() => {
-      isCartBeingUpdated.value = false;
-    });
+    }
+  );
 }
 
 function removeFromCart(id) {
-  axios.delete(`/cart/remove/${id}`)
+  router.delete(`/cart/remove/${id}`)
     .then(response => {
       if (response.data.success) {
         router.reload();
