@@ -21,7 +21,7 @@ class CartController extends Controller
                 return [
                     'id' => $item->id,
                     'name' => $item->product->name,
-                    'price' => $item->product->price,
+                    'price' => $item->finalPriceFor($item, $item->user),
                     'quantity' => $item->quantity,
                     'image' => $item->product->image
                 ];
