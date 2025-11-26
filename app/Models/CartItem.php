@@ -26,24 +26,28 @@ class CartItem extends Model
     }
 
     // Esto sólo vale para Fujifoods. Para cualquier otro caso, eliminarlo
-    public function finalPriceFor(CartItem $item, User $user): float
+    public function finalPriceFor(CartItem $item, ?User $user, int $totalSembei = null): float
     {
         $price = $item->product->price;
 
-        // Reglas por tipo de cliente
+        // Reglas por tipo de cliente (solo si existe user)
         if (str_contains($item->product->type, 'Masas artesanales')) {
-            switch ($user->role) {
-                case 'restaurant':
-                    //acá no hace absolutamente nada ya que es el precio base
-                    break;
-                default:
-                    $price *= 1.20;
-                    break;
+            if ($user) {
+                switch ($user->role) {
+                    case 'restaurant':
+                        // precio base
+                        break;
+                    default:
+                        $price *= 1.20;
+                        break;
+                }
+            } else {
+                $price *= 1.20; // también se aplica para no logueados
             }
         }
 
-        // Reglas por cantidad para galletitas
-        if ($item->quantity >= 30 && str_contains($item->product->name, 'Sembei')) {
+        // Reglas por cantidad de productos Sembei (aplica a todos: logueados y no logueados)
+        if ($totalSembei !== null && $totalSembei >= 30 && str_contains($item->product->name, 'Sembei')) {
             $price *= 0.70;
         }
 

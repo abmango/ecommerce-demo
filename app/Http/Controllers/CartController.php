@@ -16,41 +16,64 @@ class CartController extends Controller
     public function index(Request $request)
     {
         if (auth()->check()) {
-            // Recuperar los productos del carrito de la base de datos para el usuario autenticado
-            $cartItems = CartItem::where('user_id', auth()->id())->with('product')->get()->map(function ($item) {
+            $cartItemsRaw = CartItem::where('user_id', auth()->id())
+                ->with('product')
+                ->get();
+
+            $totalSembei = $cartItemsRaw
+                ->filter(fn($ci) => str_contains($ci->product->name, 'Sembei'))
+                ->sum('quantity');
+
+            $cartItems = $cartItemsRaw->map(function ($item) use ($totalSembei) {
                 return [
                     'id' => $item->id,
                     'name' => $item->product->name,
-                    'price' => $item->finalPriceFor($item, $item->user),
+                    'price' => $item->finalPriceFor($item, $item->user, $totalSembei),
                     'quantity' => $item->quantity,
                     'image' => $item->product->image
                 ];
             });
 
-
         } else {
-            // Recuperar el carrito de la sesión para usuarios no autenticados
+            // Carrito de sesión (sin usuario)
             $cart = $request->session()->get('cart', []);
             $cartItems = collect();
 
+            $sessionItemsRaw = collect();
             foreach ($cart as $id => $details) {
                 $product = Product::find($id);
+
                 if ($product) {
-                    $cartItems->push([
-                        'id' => $id,
-                        'name' => $product->name,
-                        'price' => $product->price,
+                    $sessionItemsRaw->push(new CartItem([
+                        'product_id' => $product->id,
                         'quantity' => $details['quantity'],
-                        'image' => $product->image
-                    ]);
+                    ]));
                 }
             }
+
+            $totalSembei = $sessionItemsRaw
+                ->filter(fn($ci) => str_contains($ci->product->name, 'Sembei'))
+                ->sum('quantity');
+
+            foreach ($sessionItemsRaw as $ci) {
+                $product = $ci->product;
+
+                $cartItems->push([
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $ci->finalPriceFor($ci, null, $totalSembei),
+                    'quantity' => $ci->quantity,
+                    'image' => $product->image
+                ]);
+            }
+
         }
 
         return Inertia::render('Cart/Index', [
             'cart' => $cartItems,
         ]);
     }
+
 
     // Agregar producto al carrito
     public function add(Request $request, $id)
