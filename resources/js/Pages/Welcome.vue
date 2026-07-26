@@ -266,6 +266,14 @@ onBeforeUnmount(() => {
                 </form>
             </div>
         </section>
+
+        <section class="p-5 text-center bg-slate-800 text-white">
+            <h2 class="text-xl mb-3">Seguinos en nuestras redes sociales</h2>
+            <div class="flex justify-center gap-5 text-3xl">
+                <a href="https://www.facebook.com/FujiFoods.Sansendo" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/fujifoods_sansendo/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+        </section>
     </main>
 </template>
 
